@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
 function LeftSideBar({
   disablePointer,
   textLayers,
   selectedText,
   handleLayerClick,
-  handleDoubleClick,
+  handleEditPenClick,
   delLayer,
   nameChangeSelected,
   setNameChange,
+  nameChange,
   setChangeToNameFromInput,
   addLayer,
 }) {
@@ -21,16 +22,17 @@ function LeftSideBar({
         style={{
           backgroundColor: selectedText == val.id ? "#788C9E" : "",
         }}
-        className="w-full h-[50px] pl-8 cursor-pointer
+        className="w-full h-[50px] pl-6 cursor-pointer
         flex justify-start items-center text-white"
       >
-        <div
-          onClick={() => handleLayerClick(val.id)}
-          onDoubleClick={() => handleDoubleClick(val.id)}
-          className="w-full"
-        >
-          <h1 className=" select-none">
-            <span className="font-bold pr-6">T</span>
+        <div className="w-full flex justify-start items-center">
+          <FontAwesomeIcon
+            icon={faPen}
+            width="10px"
+            className="cursor-pointer pr-6 pt-1"
+            onClick={() => handleEditPenClick(val.id, val.name)}
+          />
+          <h1 onClick={() => handleLayerClick(val.id)} className=" select-none">
             {val.name}
           </h1>
           <div className=" w-full"></div>
@@ -52,13 +54,14 @@ function LeftSideBar({
         style={{
           display: nameChangeSelected ? "block" : "none",
         }}
-        className="h-[30vh] z-10 w-[40vw] -translate-x-[50%] -translate-y-[50%]
+        className="h-[30vh] z-50 w-[40vw] -translate-x-[50%] -translate-y-[50%]
        bg-[#363636] rounded-md absolute left-1/2 top-1/2 shadow-lg text-center"
       >
         <h1 className="text-white mt-12">Enter the unique Name</h1>
         <input
           type="text"
           className="mt-8 p-2 w-[25vw]"
+          value={nameChange || ""}
           onChange={(e) => setNameChange(e.target.value)}
         />
         <br />

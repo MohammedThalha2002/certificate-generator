@@ -4,7 +4,6 @@ import RightSideBar from "../Components/RightSideBar";
 
 function CertificatePage() {
   const pointerRef = useRef();
-  const parentPointerRef = useRef();
   const [file, setFile] = useState();
   const [mousPos, setMousPos] = useState({});
   const [pointers, setPointers] = useState([]);
@@ -35,13 +34,17 @@ function CertificatePage() {
   }
 
   function handleLayerClick(id) {
+    console.log("single layer click");
     setSelectedText(id);
     if (file) {
       enablePointer();
     }
   }
 
-  function handleDoubleClick(id) {
+  function handleEditPenClick(id, name) {
+    setNameChange(name);
+    setSelectedText(id);
+    console.log("Edit click change", name);
     setNameChangeSelected(!nameChangeSelected);
   }
 
@@ -59,7 +62,6 @@ function CertificatePage() {
     setNameChange("");
     setTextLayers(updatedTextNameLayers);
     setNameChangeSelected(!nameChangeSelected);
-    console.log("double click change name");
   }
 
   useEffect(() => {
@@ -88,7 +90,9 @@ function CertificatePage() {
     console.log("clicked ont the img", mousPos.x, mousPos.y);
     const x = mousPos.x;
     const y = mousPos.y;
-    setPointers([...pointers, { x: x, y: y }]);
+    const selectedLayer = selectedText;
+    setPointers([...pointers, { x: x, y: y, selectedLayer: selectedLayer }]);
+    console.log(pointers);
     disablePointer();
   }
 
@@ -105,10 +109,7 @@ function CertificatePage() {
     ));
   }
   return (
-    <div
-      ref={parentPointerRef}
-      className="h-screen w-screen flex overflow-hidden"
-    >
+    <div className="h-screen w-screen flex overflow-hidden">
       <Pointers />
       <div
         ref={pointerRef}
@@ -121,16 +122,15 @@ function CertificatePage() {
       ></div>
       {/* left side bar*/}
       <LeftSideBar
-        enablePointer={enablePointer}
         disablePointer={disablePointer}
-        file={file}
         textLayers={textLayers}
         selectedText={selectedText}
         handleLayerClick={handleLayerClick}
-        handleDoubleClick={handleDoubleClick}
+        handleEditPenClick={handleEditPenClick}
         delLayer={delLayer}
         nameChangeSelected={nameChangeSelected}
         setNameChange={setNameChange}
+        nameChange={nameChange}
         setChangeToNameFromInput={setChangeToNameFromInput}
         addLayer={addLayer}
       />
