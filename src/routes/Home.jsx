@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 function Home() {
-  return (
-    <div className='h-screen bg-black'>Home</div>
-  )
+  return <section className="h-screen bg-white ">
+    <div></div>
+  </section>;
 }
 
-export default Home
+export default Home;

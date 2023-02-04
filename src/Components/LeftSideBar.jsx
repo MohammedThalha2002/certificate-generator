@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
 function LeftSideBar({
-  disablePointer,
   textLayers,
   selectedText,
+  setSelectedText,
   handleLayerClick,
   handleEditPenClick,
   delLayer,
@@ -32,10 +32,9 @@ function LeftSideBar({
             className="cursor-pointer pr-6 pt-1"
             onClick={() => handleEditPenClick(val.id, val.name)}
           />
-          <h1 onClick={() => handleLayerClick(val.id)} className=" select-none">
+          <h1 onClick={() => handleLayerClick(val.id)} className=" select-none w-full text-start">
             {val.name}
           </h1>
-          <div className=" w-full"></div>
         </div>
         <FontAwesomeIcon
           icon={faTrash}
@@ -97,7 +96,7 @@ function LeftSideBar({
           />
         </div>
         <Layers />
-        <div className="h-full" onClick={disablePointer}></div>
+        <div className="h-full" onClick={() => setSelectedText("")}></div>
       </div>
     </>
   );

@@ -1,30 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
+import Draggable from "react-draggable";
 
 function CertificatePage() {
-  const pointerRef = useRef();
   const [file, setFile] = useState();
   const [mousPos, setMousPos] = useState({});
-  const [pointers, setPointers] = useState([]);
   const [selectedText, setSelectedText] = useState();
   const [nameChangeSelected, setNameChangeSelected] = useState(false);
   const [nameChange, setNameChange] = useState();
-  const [textLayers, setTextLayers] = useState([
-    {
-      id: 0.3,
-      name: "Name",
-    },
-    {
-      id: 0.5,
-      name: "Position",
-    },
-  ]);
+  const [textLayers, setTextLayers] = useState([]);
+
+  // ATTRIBUTES
+  const [textName, setTextName] = useState("");
 
   function addLayer() {
     let layer = {
       id: Math.random(),
       name: "Text",
+      val: "NAME",
     };
     setTextLayers([...textLayers, layer]);
   }
@@ -36,9 +30,6 @@ function CertificatePage() {
   function handleLayerClick(id) {
     console.log("single layer click");
     setSelectedText(id);
-    if (file) {
-      enablePointer();
-    }
   }
 
   function handleEditPenClick(id, name) {
@@ -54,6 +45,7 @@ function CertificatePage() {
         return {
           id: val.id,
           name: nameChange,
+          val: val.name,
         };
       } else {
         return val;
@@ -74,57 +66,37 @@ function CertificatePage() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  function enablePointer() {
-    pointerRef.current.style.display = "block";
-  }
-  function disablePointer() {
-    pointerRef.current.style.display = "none";
-  }
+  // RIGHT SIDE BAR RELATED
 
   // uploading an image
   function uploadImage(img) {
     setFile(URL.createObjectURL(img));
   }
 
-  function addPointerToCertificate() {
-    console.log("clicked ont the img", mousPos.x, mousPos.y);
-    const x = mousPos.x;
-    const y = mousPos.y;
-    const selectedLayer = selectedText;
-    setPointers([...pointers, { x: x, y: y, selectedLayer: selectedLayer }]);
-    console.log(pointers);
-    disablePointer();
+  function changeAttributeValues(textRes) {
+    const updatedTextNameLayers = textLayers.map((val) => {
+      if (val.id == selectedText) {
+        return {
+          id: val.id,
+          name: val.name,
+          val: textRes,
+        };
+      } else {
+        return val;
+      }
+    });
+    setTextLayers(updatedTextNameLayers);
+    console.log(updatedTextNameLayers);
   }
 
-  function Pointers() {
-    return pointers.map((val) => (
-      <div
-        key={val.x + val.y}
-        style={{
-          top: val.y,
-          left: val.x,
-        }}
-        className="absolute z-50 px-1 py-3 bg-red-500"
-      ></div>
-    ));
-  }
   return (
     <div className="h-screen w-screen flex overflow-hidden">
-      <Pointers />
-      <div
-        ref={pointerRef}
-        style={{
-          top: mousPos.y,
-          left: mousPos.x,
-          display: "none",
-        }}
-        className="absolute z-50 top-0 left-0 px-1 py-3 bg-red-500"
-      ></div>
       {/* left side bar*/}
       <LeftSideBar
-        disablePointer={disablePointer}
+        // disablePointer={disablePointer}
         textLayers={textLayers}
         selectedText={selectedText}
+        setSelectedText={setSelectedText}
         handleLayerClick={handleLayerClick}
         handleEditPenClick={handleEditPenClick}
         delLayer={delLayer}
@@ -141,14 +113,28 @@ function CertificatePage() {
             ({mousPos.x}, {mousPos.y})
           </p>
         </div>
-        <img
-          onClick={addPointerToCertificate}
-          src={file}
-          className=" w-[90%]"
-        />
+        {textLayers.map((val) => (
+          <Draggable key={val.id}>
+            <div
+              style={{
+                border:
+                  selectedText == val.id ? "2px solid hsl(140,40%,55%)" : "",
+                padding: "4px",
+              }}
+            >
+              <h1 className="text-2xl">{val.val}</h1>
+            </div>
+          </Draggable>
+        ))}
+        <img src={file} className=" w-[90%]" />
       </div>
       {/* right side tools */}
-      <RightSideBar upload={uploadImage} />
+      <RightSideBar
+        upload={uploadImage}
+        changeAttributeValues={changeAttributeValues}
+        setTextName={setTextName}
+        textName={textName}
+      />
     </div>
   );
 }

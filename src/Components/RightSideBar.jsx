@@ -1,16 +1,21 @@
 import React, { useRef } from "react";
 
-function RightSideBar(props) {
+function RightSideBar({
+  upload,
+  changeAttributeValues,
+  setTextName,
+  textName,
+}) {
   const hiddenFileInput = React.useRef(null);
 
-  const handleClick = (event) => {
+  const handleClick = () => {
     hiddenFileInput.current.click();
   };
 
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
     console.log(fileUploaded);
-    props.upload(fileUploaded);
+    upload(fileUploaded);
   };
 
   return (
@@ -46,6 +51,11 @@ function RightSideBar(props) {
           <h1 className="pb-2">Text</h1>
           <input
             type="text"
+            value={textName}
+            onChange={(e) => {
+              setTextName(e.target.value);
+              changeAttributeValues(e.target.value);
+            }}
             className="bg-transparent w-[100%] py-1 px-1
              border-stroke border-solid border-[1px]"
           />
