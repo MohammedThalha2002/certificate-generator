@@ -14,6 +14,7 @@ function LeftSideBar({
   nameChange,
   setChangeToNameFromInput,
   addLayer,
+  setTextName
 }) {
   function Layers() {
     return textLayers.map((val) => (
@@ -32,7 +33,10 @@ function LeftSideBar({
             className="cursor-pointer pr-6 pt-1"
             onClick={() => handleEditPenClick(val.id, val.name)}
           />
-          <h1 onClick={() => handleLayerClick(val.id)} className=" select-none w-full text-start">
+          <h1
+            onClick={() => handleLayerClick(val.id, val.val)}
+            className=" select-none w-full text-start"
+          >
             {val.name}
           </h1>
         </div>
@@ -96,7 +100,13 @@ function LeftSideBar({
           />
         </div>
         <Layers />
-        <div className="h-full" onClick={() => setSelectedText("")}></div>
+        <div
+          className="h-full"
+          onClick={() => {
+            setSelectedText("");
+            setTextName("");
+          }}
+        ></div>
       </div>
     </>
   );

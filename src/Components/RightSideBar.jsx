@@ -3,8 +3,9 @@ import React, { useRef } from "react";
 function RightSideBar({
   upload,
   changeAttributeValues,
-  setTextName,
   textName,
+  changeAttributeColor,
+  textColor,
 }) {
   const hiddenFileInput = React.useRef(null);
 
@@ -53,7 +54,6 @@ function RightSideBar({
             type="text"
             value={textName}
             onChange={(e) => {
-              setTextName(e.target.value);
               changeAttributeValues(e.target.value);
             }}
             className="bg-transparent w-[100%] py-1 px-1
@@ -103,8 +103,14 @@ function RightSideBar({
           <h1 className="pb-2">Fill</h1>
           <div className="flex justify-between items-center">
             <div className="bg-transparent h-9 w-[55%] flex justify-between py-1 px-2 mt-8 border-stroke border-solid border-[1px]">
-              <h1>#FFFFF</h1>
-              <input type="color" width="10px" height="10px" />
+              <h1>{textColor}</h1>
+              <input
+                type="color"
+                value={textColor}
+                width="10px"
+                height="10px"
+                onChange={(e) => changeAttributeColor(e.target.value)}
+              />
             </div>
             <select
               id="font-size"
