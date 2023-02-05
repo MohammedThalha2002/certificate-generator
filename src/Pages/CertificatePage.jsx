@@ -5,23 +5,31 @@ import Draggable from "react-draggable";
 
 function CertificatePage() {
   const [file, setFile] = useState();
-  const [mousPos, setMousPos] = useState({});
   const [selectedText, setSelectedText] = useState();
+  const [selectedAsset, setSelectedAsset] = useState();
   const [nameChangeSelected, setNameChangeSelected] = useState(false);
   const [nameChange, setNameChange] = useState();
   const [textLayers, setTextLayers] = useState([]);
 
+
   // ATTRIBUTES
-  const [textName, setTextName] = useState("");
-  const [textColor, setTextColor] = useState("");
+  const [textName, setTextName] = useState("NAME");
+  const [textColor, setTextColor] = useState("#000000");
+  const [fontWeight, setFontWeight] = useState("400");
+  const [fontSize, setFontSize] = useState("24");
+  const [fontFamily, setFontFamily] = useState("Poppins");
+
+  // PRINTING
+  const printCertificateRef = useRef();
 
   function addLayer() {
     let layer = {
       id: Math.random(),
       name: "Text",
       val: "NAME",
-      fontFamily: "poppins",
+      fontFamily: "Poppins",
       fontWeight: "400",
+      fontSize: "24",
       color: "#000000",
       opacity: "100",
     };
@@ -32,10 +40,18 @@ function CertificatePage() {
     setTextLayers(newDelLayer);
   }
 
-  function handleLayerClick(id, val) {
+  function handleLayerClick(id, val, color, fontWeight, fontSize, fontFamily) {
     console.log("single layer click");
     setSelectedText(id);
     setTextName(val);
+    setTextColor(color);
+    setFontWeight(fontWeight);
+    setFontSize(fontSize);
+    setFontFamily(fontFamily);
+  }
+
+  function handleAssetCertClick(id) {
+    setSelectedAsset(id);
   }
 
   function handleEditPenClick(id, name) {
@@ -66,22 +82,14 @@ function CertificatePage() {
     setNameChangeSelected(!nameChangeSelected);
   }
 
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      setMousPos({ x: event.clientX - 20, y: event.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   // RIGHT SIDE BAR RELATED
 
   // uploading an image
   function uploadImage(img) {
     setFile(URL.createObjectURL(img));
   }
+
+  // TEXT VALUE
 
   function changeAttributeValues(textRes) {
     setTextName(textRes);
@@ -93,6 +101,7 @@ function CertificatePage() {
           val: textRes,
           fontFamily: val.fontFamily,
           fontWeight: val.fontWeight,
+          fontSize: val.fontSize,
           color: val.color,
           opacity: val.opacity,
         };
@@ -102,6 +111,77 @@ function CertificatePage() {
     });
     setTextLayers(updatedTextNameLayers);
   }
+
+  // TEXT --> FONT WEIGHT
+
+  function changeAttributeFontWeight(fontWeightRes) {
+    setFontWeight(fontWeightRes);
+    const updatedTextNameLayers = textLayers.map((val) => {
+      if (val.id == selectedText) {
+        return {
+          id: val.id,
+          name: val.name,
+          val: val.val,
+          fontFamily: val.fontFamily,
+          fontWeight: fontWeightRes,
+          fontSize: val.fontSize,
+          color: val.color,
+          opacity: val.opacity,
+        };
+      } else {
+        return val;
+      }
+    });
+    setTextLayers(updatedTextNameLayers);
+  }
+
+  // TEXT --> FONT SIZE
+
+  function changeAttributeFontSize(fontSizeRes) {
+    setFontSize(fontSizeRes);
+    const updatedTextNameLayers = textLayers.map((val) => {
+      if (val.id == selectedText) {
+        return {
+          id: val.id,
+          name: val.name,
+          val: val.val,
+          fontFamily: val.fontFamily,
+          fontWeight: val.fontWeight,
+          fontSize: fontSizeRes,
+          color: val.color,
+          opacity: val.opacity,
+        };
+      } else {
+        return val;
+      }
+    });
+    setTextLayers(updatedTextNameLayers);
+  }
+
+  // TEXT --> FONT FAMILY
+
+  function changeAttributeFontFamily(fontFamilyRes) {
+    setFontFamily(fontFamilyRes);
+    const updatedTextNameLayers = textLayers.map((val) => {
+      if (val.id == selectedText) {
+        return {
+          id: val.id,
+          name: val.name,
+          val: val.val,
+          fontFamily: fontFamilyRes,
+          fontWeight: val.fontWeight,
+          fontSize: val.fontSize,
+          color: val.color,
+          opacity: val.opacity,
+        };
+      } else {
+        return val;
+      }
+    });
+    setTextLayers(updatedTextNameLayers);
+  }
+
+  // FILL --> COLOR
 
   function changeAttributeColor(colorRes) {
     setTextColor(colorRes);
@@ -113,6 +193,7 @@ function CertificatePage() {
           val: val.val,
           fontFamily: val.fontFamily,
           fontWeight: val.fontWeight,
+          fontSize: val.fontSize,
           color: colorRes,
           opacity: val.opacity,
         };
@@ -140,43 +221,58 @@ function CertificatePage() {
         setChangeToNameFromInput={setChangeToNameFromInput}
         addLayer={addLayer}
         setTextName={setTextName}
+        setTextColor={setTextColor}
+        setFontWeight={setFontWeight}
+        setFontSize={setFontSize}
+        setFontFamily={setFontFamily}
+        handleAssetCertClick={handleAssetCertClick}
+        selectedAsset={selectedAsset}
       />
       {/* center -certficate */}
       <div className="bg-bgGrey h-screen w-[58%] relative flex items-center justify-center">
-        <div className="absolute top-0 right-0 bg-white">
-          <p>
-            ({mousPos.x}, {mousPos.y})
-          </p>
-        </div>
-        {textLayers.map((val) => (
-          <Draggable key={val.id}>
-            <div
-              style={{
-                border:
-                  selectedText == val.id ? "2px solid hsl(140,40%,55%)" : "",
-                padding: "4px",
-                cursor: "pointer",
-                position: "absolute",
-                margin: "auto",
-              }}
-              onClick={() => handleLayerClick(val.id, val.val)}
-            >
-              <h1
+        <div
+          className="flex items-center justify-center"
+          ref={printCertificateRef}
+        >
+          {textLayers.map((val) => (
+            <Draggable key={val.id}>
+              <div
                 style={{
-                  color: val.color,
+                  border: selectedText == val.id ? "2px solid #7aff95" : "",
+                  padding: "4px",
+                  cursor: "pointer",
+                  position: "absolute",
                 }}
-                className="text-2xl"
+                onClick={() =>
+                  handleLayerClick(
+                    val.id,
+                    val.val,
+                    val.color,
+                    val.fontWeight,
+                    val.fontSize,
+                    val.fontFamily
+                  )
+                }
               >
-                {val.val}
-              </h1>
-            </div>
-          </Draggable>
-        ))}
-        <img
-          src={file}
-          className=" w-[90%]"
-          onClick={() => handleLayerClick()}
-        />
+                <h1
+                  style={{
+                    color: val.color,
+                    fontWeight: val.fontWeight,
+                    fontSize: val.fontSize + "px",
+                    fontFamily: val.fontFamily,
+                  }}
+                >
+                  {val.val}
+                </h1>
+              </div>
+            </Draggable>
+          ))}
+          <img
+            src={file}
+            className=" w-[90%]"
+            onClick={() => handleLayerClick()}
+          />
+        </div>
       </div>
       {/* right side tools */}
       <RightSideBar
@@ -185,6 +281,14 @@ function CertificatePage() {
         textName={textName}
         changeAttributeColor={changeAttributeColor}
         textColor={textColor}
+        selectedText={selectedText}
+        changeAttributeFontWeight={changeAttributeFontWeight}
+        fontWeight={fontWeight}
+        changeAttributeFontSize={changeAttributeFontSize}
+        fontSize={fontSize}
+        changeAttributeFontFamily={changeAttributeFontFamily}
+        fontFamily={fontFamily}
+        printCertificateRef={printCertificateRef}
       />
     </div>
   );

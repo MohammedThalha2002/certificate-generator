@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
+import ReactToPrint from "react-to-print";
 
 function RightSideBar({
   upload,
@@ -6,6 +7,14 @@ function RightSideBar({
   textName,
   changeAttributeColor,
   textColor,
+  selectedText,
+  changeAttributeFontWeight,
+  fontWeight,
+  changeAttributeFontSize,
+  fontSize,
+  changeAttributeFontFamily,
+  fontFamily,
+  printCertificateRef,
 }) {
   const hiddenFileInput = React.useRef(null);
 
@@ -53,46 +62,51 @@ function RightSideBar({
           <input
             type="text"
             value={textName}
-            onChange={(e) => {
-              changeAttributeValues(e.target.value);
-            }}
+            onChange={(e) => changeAttributeValues(e.target.value)}
             className="bg-transparent w-[100%] py-1 px-1
              border-stroke border-solid border-[1px]"
           />
           <select
-            id="fonts"
+            value={fontFamily}
+            onChange={(e) => changeAttributeFontFamily(e.target.value)}
             className="bg-transparent w-[100%] py-1 px-1 mt-8 dark:bg-greyHighlight dark:border-solid
                dark:border-stroke dark:border-[1px] dark:text-white"
           >
-            <option value="US">Poppins</option>
-            <option value="CA">Arial</option>
-            <option value="FR">France</option>
-            <option value="DE">Germany</option>
+            <option defaultChecked></option>
+            <option value="Poppins">Poppins</option>
+            <option value="Raleway">Raleway</option>
+            <option value="Sassy Frass">Sassy Frass</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Itim">Itim</option>
+            <option value="Solitreo">Solitreo</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Source Sans Pro">Sans Pro</option>
+            <option value="Quicksand">Quicksand</option>
+            <option value="Dancing Script">Dancing Script</option>
           </select>
           <div className="flex justify-between items-center">
+            {/* FONT WEIGHT */}
             <select
-              id="fonts"
+              value={fontWeight}
+              onChange={(e) => changeAttributeFontWeight(e.target.value)}
               className="bg-transparent w-[45%] py-1 px-1 mt-8 dark:bg-greyHighlight dark:border-solid
                dark:border-stroke dark:border-[1px] dark:text-white"
             >
-              <option value="CA">Light</option>
-              <option value="CA">Regular</option>
-              <option value="FR">Medium</option>
-              <option value="DE">Bold</option>
+              <option defaultChecked></option>
+              <option value="300">Light</option>
+              <option value="400">Regular</option>
+              <option value="500">Medium</option>
+              <option value="600">Semi-Bold</option>
+              <option value="800">Bold</option>
             </select>
-            <select
-              id="font-size"
-              className="bg-transparent w-[45%] py-1 px-1 mt-8 dark:bg-greyHighlight dark:border-solid
-               dark:border-stroke dark:border-[1px] dark:text-white"
-            >
-              <option value="CA">10px</option>
-              <option value="CA">20px</option>
-              <option value="FR">30px</option>
-              <option value="DE">40px</option>
-              <option value="DE">50px</option>
-              <option value="DE">60px</option>
-              <option value="DE">70px</option>
-            </select>
+            {/* FONT SIZE */}
+            <input
+              type="number"
+              value={fontSize}
+              onChange={(e) => changeAttributeFontSize(e.target.value)}
+              className="bg-transparent w-[45%] py-1 px-1 mt-8
+             border-stroke border-solid border-[1px]"
+            />
           </div>
         </div>
         {/* FILL PROPERTIES */}
@@ -109,6 +123,7 @@ function RightSideBar({
                 value={textColor}
                 width="10px"
                 height="10px"
+                disabled={selectedText ? "" : "disabled"}
                 onChange={(e) => changeAttributeColor(e.target.value)}
               />
             </div>
@@ -128,6 +143,18 @@ function RightSideBar({
             </select>
           </div>
         </div>
+        <ReactToPrint
+          trigger={() => {
+            return (
+              <button className="text-black m-4 bg-white p-2 rounded-md">
+                CLICK TO PRINT
+              </button>
+            );
+          }}
+          content={() => printCertificateRef.current}
+          // pageStyle="print"
+          documentTitle="certificate"
+        />
       </div>
     </>
   );
