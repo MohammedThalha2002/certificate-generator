@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import Cert1 from "../assets/1.png";
@@ -29,8 +29,7 @@ function LeftSideBar({
   setFontWeight,
   setTextColor,
   setFontFamily,
-  handleAssetCertClick,
-  selectedAsset
+  uploadAssetImage,
 }) {
   const [layerClick, setLayerClick] = useState(true);
   const [assetsClick, setAssetsClick] = useState(false);
@@ -103,23 +102,29 @@ function LeftSideBar({
     ));
   }
 
-  function Assets() {
+  const Assets = memo(() => {
+
     return (
-      <div className="w-full h-screen overflow-y-scroll">
+      <div
+        style={{
+          overflowAnchor: "auto",
+        }}
+        className="w-full h-[100vh] overflow-y-scroll"
+      >
         {assets.map((val) => (
           <img
-            key={val}
-            style={{
-              backgroundColor: selectedAsset == val ? "#788C9E" : "",
-            }}
-            onClick={() => handleAssetCertClick(val)}
+            key={Math.random()}
+            // style={{
+            //   backgroundColor: assetSelected == val ? "#788C9E" : "",
+            // }}
+            onClick={() => uploadAssetImage(val)}
             src={val}
             className="p-4 cursor-pointer"
           />
         ))}
       </div>
     );
-  }
+  });
 
   return (
     <>

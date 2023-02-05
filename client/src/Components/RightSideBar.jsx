@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactToPrint from "react-to-print";
+import ExcelData from "./ExcelData";
 
 function RightSideBar({
   upload,
@@ -17,6 +18,7 @@ function RightSideBar({
   printCertificateRef,
 }) {
   const hiddenFileInput = React.useRef(null);
+  const [multiExport, setMultiExport] = useState(false);
 
   const handleClick = () => {
     hiddenFileInput.current.click();
@@ -28,8 +30,14 @@ function RightSideBar({
     upload(fileUploaded);
   };
 
+  function handleMultipleExports() {
+    console.log("multiple upload");
+    setMultiExport(!multiExport);
+  }
+
   return (
     <>
+      {/* <ExcelData /> */}
       <div
         className="bg-greyHighlight h-screen w-[22%] 
       border-stroke border-solid border-[1px]"
@@ -143,18 +151,30 @@ function RightSideBar({
             </select>
           </div>
         </div>
-        <ReactToPrint
-          trigger={() => {
-            return (
-              <button className="text-black m-4 bg-white p-2 rounded-md">
-                CLICK TO PRINT
-              </button>
-            );
-          }}
-          content={() => printCertificateRef.current}
-          // pageStyle="print"
-          documentTitle="certificate"
-        />
+        <div
+          className="w-full h-[160px] border-stroke border-solid border-b-[1px]
+        flex-col justify-between px-8 py-4 items-center text-white"
+        >
+          <h1 className="pb-2">Exports</h1>
+          <ReactToPrint
+            trigger={() => {
+              return (
+                <button className="text-black bg-white p-2 rounded-md">
+                  Export to pdf
+                </button>
+              );
+            }}
+            content={() => printCertificateRef.current}
+            // pageStyle="print"
+            documentTitle="certificate"
+          />
+          <button
+            onClick={handleMultipleExports}
+            className="text-black my-4 bg-white p-2 rounded-md"
+          >
+            Multiple Exports
+          </button>
+        </div>
       </div>
     </>
   );

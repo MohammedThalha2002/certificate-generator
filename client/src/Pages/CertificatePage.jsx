@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
 import Draggable from "react-draggable";
@@ -6,11 +6,9 @@ import Draggable from "react-draggable";
 function CertificatePage() {
   const [file, setFile] = useState();
   const [selectedText, setSelectedText] = useState();
-  const [selectedAsset, setSelectedAsset] = useState();
   const [nameChangeSelected, setNameChangeSelected] = useState(false);
   const [nameChange, setNameChange] = useState();
   const [textLayers, setTextLayers] = useState([]);
-
 
   // ATTRIBUTES
   const [textName, setTextName] = useState("NAME");
@@ -50,10 +48,6 @@ function CertificatePage() {
     setFontFamily(fontFamily);
   }
 
-  function handleAssetCertClick(id) {
-    setSelectedAsset(id);
-  }
-
   function handleEditPenClick(id, name) {
     setNameChange(name);
     setSelectedText(id);
@@ -81,6 +75,12 @@ function CertificatePage() {
     setTextLayers(updatedTextNameLayers);
     setNameChangeSelected(!nameChangeSelected);
   }
+
+  // Upload assets image
+
+  const uploadAssetImage = useCallback((img) => {
+    setFile(img);
+  }, []);
 
   // RIGHT SIDE BAR RELATED
 
@@ -225,8 +225,7 @@ function CertificatePage() {
         setFontWeight={setFontWeight}
         setFontSize={setFontSize}
         setFontFamily={setFontFamily}
-        handleAssetCertClick={handleAssetCertClick}
-        selectedAsset={selectedAsset}
+        uploadAssetImage={uploadAssetImage}
       />
       {/* center -certficate */}
       <div className="bg-bgGrey h-screen w-[58%] relative flex items-center justify-center">
