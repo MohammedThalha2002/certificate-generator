@@ -47,7 +47,7 @@ function FormData() {
           progress: undefined,
           theme: "light",
         });
-        navigate("/home");
+        navigate("/certificate");
       } else {
         toast.error(res, {
           position: "top-right",

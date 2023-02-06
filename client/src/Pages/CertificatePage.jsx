@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
 import Draggable from "react-draggable";
@@ -11,7 +15,7 @@ function CertificatePage() {
   const [textLayers, setTextLayers] = useState([]);
 
   // ATTRIBUTES
-  const [textName, setTextName] = useState("NAME");
+  const [textName, setTextName] = useState("XXXXXX");
   const [textColor, setTextColor] = useState("#000000");
   const [fontWeight, setFontWeight] = useState("400");
   const [fontSize, setFontSize] = useState("24");
@@ -24,7 +28,7 @@ function CertificatePage() {
     let layer = {
       id: Math.random(),
       name: "Text",
-      val: "NAME",
+      val: "XXXXXX",
       fontFamily: "Poppins",
       fontWeight: "400",
       fontSize: "24",
@@ -204,6 +208,33 @@ function CertificatePage() {
     setTextLayers(updatedTextNameLayers);
   }
 
+  let newTextLayer = textLayers;
+
+  // change attribute value for multiple exports
+  function changeAttributeValuesForMulExports(textValue, key) {
+    // setTextName(textValue);
+    let modify = newTextLayer.map((val) => {
+      if (val.name === key) {
+        return {
+          id: val.id,
+          name: val.name,
+          val: textValue,
+          fontFamily: val.fontFamily,
+          fontWeight: val.fontWeight,
+          fontSize: val.fontSize,
+          color: val.color,
+          opacity: val.opacity,
+        };
+      } else {
+        return val;
+      }
+    });
+    console.log(modify);
+    newTextLayer = modify;
+    setTextLayers(modify);
+    // console.log(updatedTextNameLayers);
+  }
+
   return (
     <div className="h-screen w-screen flex overflow-hidden">
       {/* left side bar*/}
@@ -230,7 +261,7 @@ function CertificatePage() {
       {/* center -certficate */}
       <div className="bg-bgGrey h-screen w-[58%] relative flex items-center justify-center">
         <div
-          className="flex items-center justify-center"
+          className="bg-transparent flex items-center justify-center w-full"
           ref={printCertificateRef}
         >
           {textLayers.map((val) => (
@@ -268,7 +299,7 @@ function CertificatePage() {
           ))}
           <img
             src={file}
-            className=" w-[90%]"
+            className=" w-[95%]"
             onClick={() => handleLayerClick()}
           />
         </div>
@@ -288,6 +319,7 @@ function CertificatePage() {
         changeAttributeFontFamily={changeAttributeFontFamily}
         fontFamily={fontFamily}
         printCertificateRef={printCertificateRef}
+        changeAttributeValuesForMulExports={changeAttributeValuesForMulExports}
       />
     </div>
   );

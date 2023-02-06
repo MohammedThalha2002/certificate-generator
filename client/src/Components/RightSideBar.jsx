@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactToPrint from "react-to-print";
-import ExcelData from "./ExcelData";
+import ExcelUpload from "./ExcelUpload";
+import { exportComponentAsPNG } from "react-component-export-image";
 
 function RightSideBar({
   upload,
@@ -16,6 +17,7 @@ function RightSideBar({
   changeAttributeFontFamily,
   fontFamily,
   printCertificateRef,
+  changeAttributeValuesForMulExports,
 }) {
   const hiddenFileInput = React.useRef(null);
   const [multiExport, setMultiExport] = useState(false);
@@ -32,12 +34,41 @@ function RightSideBar({
 
   function handleMultipleExports() {
     console.log("multiple upload");
-    setMultiExport(!multiExport);
+    setMultiExport(true);
+  }
+
+  function exportToPNG() {
+    exportComponentAsPNG(printCertificateRef, {
+      fileName: "certificate",
+      html2CanvasOptions: {
+        backgroundColor: "transparent",
+      },
+    });
+  }
+
+  function exportToJPG() {
+    exportComponentAsPNG(printCertificateRef, {
+      fileName: "certificate",
+      html2CanvasOptions: {
+        backgroundColor: "transparent",
+      },
+    });
   }
 
   return (
     <>
-      {/* <ExcelData /> */}
+      {multiExport ? (
+        <ExcelUpload
+          setMultiExport={setMultiExport}
+          exportToJPG={exportToJPG}
+          exportToPNG={exportToPNG}
+          changeAttributeValuesForMulExports={
+            changeAttributeValuesForMulExports
+          }
+        />
+      ) : (
+        <div></div>
+      )}
       <div
         className="bg-greyHighlight h-screen w-[22%] 
       border-stroke border-solid border-[1px]"
@@ -152,25 +183,26 @@ function RightSideBar({
           </div>
         </div>
         <div
-          className="w-full h-[160px] border-stroke border-solid border-b-[1px]
-        flex-col justify-between px-8 py-4 items-center text-white"
+          className="w-full h-[250px] border-stroke border-solid border-b-[1px]
+        flex flex-col justify-start px-8 py-4 items-start text-white"
         >
           <h1 className="pb-2">Exports</h1>
-          <ReactToPrint
-            trigger={() => {
-              return (
-                <button className="text-black bg-white p-2 rounded-md">
-                  Export to pdf
-                </button>
-              );
-            }}
-            content={() => printCertificateRef.current}
-            // pageStyle="print"
-            documentTitle="certificate"
-          />
+
+          <button
+            className="text-black my-2 bg-white p-2 rounded-md"
+            onClick={exportToJPG}
+          >
+            Export As JPEG
+          </button>
+          <button
+            className="text-black my-2 bg-white p-2 rounded-md"
+            onClick={exportToPNG}
+          >
+            Export As PNG
+          </button>
           <button
             onClick={handleMultipleExports}
-            className="text-black my-4 bg-white p-2 rounded-md"
+            className="text-black my-2 bg-white p-2 rounded-md"
           >
             Multiple Exports
           </button>
