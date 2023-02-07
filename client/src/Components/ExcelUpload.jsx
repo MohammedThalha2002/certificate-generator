@@ -35,13 +35,15 @@ function ExcelUpload({
 
   async function generateMultipleExports() {
     for (const data of jsonData) {
+      let name = data.Name;
+      console.log(name);
       for (const head of headings) {
         await changeAttributeValuesForMulExports(data[head], head);
       }
       console.log(".................");
       console.log("PRINT CERTIFICATE");
       console.log(".................");
-      await exportToPNG();
+      // await exportToPNG();
     }
   }
 
@@ -62,30 +64,30 @@ function ExcelUpload({
         onClick={() => setMultiExport(false)}
       />
       <div className="flex flex-col text-center justify-center items-center">
-      {jsonData.length !== 0 ? (
+        {jsonData.length !== 0 ? (
           <></>
         ) : (
           <div
-          className="w-full relative h-[50px]
+            className="w-full relative h-[50px]
          px-8 items-center justify-center text-white"
-        >
-          <div>
-            <button
-              onClick={handleClick}
-              className="bg-bgGrey text-white px-6 py-1 rounded-md my-6 "
-            >
-              Upload
-            </button>
-            <input
-              type="file"
-              ref={hiddenFileInput}
-              onChange={readUploadFile}
-              style={{ display: "none" }}
-            />
+          >
+            <div>
+              <button
+                onClick={handleClick}
+                className="bg-bgGrey text-white px-6 py-1 rounded-md my-6 "
+              >
+                Upload
+              </button>
+              <input
+                type="file"
+                ref={hiddenFileInput}
+                onChange={readUploadFile}
+                style={{ display: "none" }}
+              />
+            </div>
           </div>
-        </div>
         )}
-        
+
         <table className="w-[90%] m-8  border-2 border-solid border-bgGrey">
           <tr>
             {headings.map((val, key) => (

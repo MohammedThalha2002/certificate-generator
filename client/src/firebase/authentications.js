@@ -17,7 +17,11 @@ export const authenticationSystem = async (state, email, password) => {
     await createUserWithEmailAndPassword(authentication, email, password)
       .then((response) => {
         console.log(response);
-        sessionStorage.setItem("Auth Token", true);
+        authentication.currentUser
+          .getIdToken()
+          .then((data) =>
+            sessionStorage.setItem("Auth Token", data.slice(0, 13))
+          );
         result = "success";
       })
       .catch((error) => {
@@ -43,8 +47,12 @@ export const authenticationSystem = async (state, email, password) => {
     console.log("Logging in");
     await signInWithEmailAndPassword(authentication, email, password)
       .then((response) => {
-        console.log(response);
-        sessionStorage.setItem("Auth Token", true);
+        authentication.currentUser
+          .getIdToken()
+          .then((data) =>
+            sessionStorage.setItem("Auth Token", data.slice(0, 13))
+          );
+
         result = "success";
       })
       .catch((error) => {

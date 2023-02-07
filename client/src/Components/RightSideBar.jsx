@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import ReactToPrint from "react-to-print";
 import ExcelUpload from "./ExcelUpload";
 import { exportComponentAsPNG } from "react-component-export-image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 function RightSideBar({
+  alreadyUploadedImg,
   upload,
+  textLayers,
   changeAttributeValues,
   textName,
   changeAttributeColor,
@@ -20,6 +24,10 @@ function RightSideBar({
   changeAttributeValuesForMulExports,
 }) {
   const hiddenFileInput = React.useRef(null);
+  const [img, setImg] = useState("");
+  const [imgAlreadyUploaded, setImgAlreadyUploaded] = useState(false);
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
   const [multiExport, setMultiExport] = useState(false);
 
   const handleClick = () => {
@@ -28,7 +36,12 @@ function RightSideBar({
 
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
-    console.log(fileUploaded);
+    // new file was uploaded so use the file
+    if(img !== fileUploaded){
+      setImgAlreadyUploaded(false);
+    }
+    setImg(fileUploaded);
+    // setImg(URL.createObjectURL(fileUploaded));
     upload(fileUploaded);
   };
 
@@ -37,9 +50,9 @@ function RightSideBar({
     setMultiExport(true);
   }
 
-  function exportToPNG() {
+  function exportToPNG(name) {
     exportComponentAsPNG(printCertificateRef, {
-      fileName: "certificate",
+      fileName: name || "certificate",
       html2CanvasOptions: {
         backgroundColor: "transparent",
       },
@@ -53,6 +66,102 @@ function RightSideBar({
         backgroundColor: "transparent",
       },
     });
+  }
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  async function saveProjectToCloud() {
+    setLoading(true);
+    const projectName = sessionStorage.getItem("projectName");
+    if (img && !imgAlreadyUploaded && !projectName) {
+      const base64 = await convertBase64(img);
+      axios
+        .post("http://localhost:3000/uploadImage", { image: base64 })
+        .then((res) => {
+          setUrl(res.data);
+          console.log("Image uploaded Succesfully");
+          setImgAlreadyUploaded(true);
+          addOrUpdateProject();
+        })
+        .catch((err) => {
+          console.log(err);
+          return;
+        });
+    } else {
+      addOrUpdateProject();
+    }
+
+    async function addOrUpdateProject() {
+      const token = sessionStorage.getItem("Auth Token");
+      const projectName = sessionStorage.getItem("projectName");
+      let today = new Date();
+      let dd = String(today.getDate()).padStart(2, "0");
+      let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      let yyyy = today.getFullYear();
+
+      today = mm + "/" + dd + "/" + yyyy;
+
+      if (projectName) {
+        // project already exits --> update
+        console.log("project updating started");
+        const Projectdata = {
+          user: token,
+          date: today,
+          projectName: projectName,
+          img: url || alreadyUploadedImg,
+          layers: textLayers,
+        };
+
+        await axios
+          .post("http://localhost:3000/update_project", {
+            user: token,
+            projectName: Projectdata.projectName,
+            values: Projectdata,
+          })
+          .then((res) => {
+            console.log(res);
+            setLoading(false);
+            console.log("project updated");
+          })
+          .catch((err) => {
+            console.log("project updating failed");
+          });
+      } else {
+        // create project --> add
+        console.log("project creating ....");
+        const Projectdata = {
+          user: token,
+          date: today,
+          projectName: (Math.random() + 1).toString(36).substring(7),
+          img: url,
+          layers: textLayers,
+        };
+        await axios
+          .post("http://localhost:3000/add_project", Projectdata)
+          .then((res) => {
+            sessionStorage.setItem("projectName", Projectdata.projectName);
+            console.log(res);
+            setLoading(false);
+            console.log("project created sucessfully");
+          })
+          .catch((err) => {
+            console.log("project creation failed");
+          });
+      }
+    }
   }
 
   return (
@@ -90,6 +199,12 @@ function RightSideBar({
             ref={hiddenFileInput}
             onChange={handleChange}
             style={{ display: "none" }}
+          />
+          <FontAwesomeIcon
+            icon={faCloudArrowUp}
+            width="20px"
+            className="cursor-pointer pr-4 pt-1"
+            onClick={saveProjectToCloud}
           />
         </div>
         {/* TEXT PROPERTIES */}

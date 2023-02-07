@@ -1,11 +1,8 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
 import Draggable from "react-draggable";
+import axios from "axios";
 
 function CertificatePage() {
   const [file, setFile] = useState();
@@ -23,6 +20,27 @@ function CertificatePage() {
 
   // PRINTING
   const printCertificateRef = useRef();
+
+  // GETTING DATA IF PROJECT IS ALREADY CREATED
+  async function getAlreadyCreatedCertificate() {
+    const projectName = sessionStorage.getItem("projectName");
+    if (projectName) {
+      await axios
+        .post("http://localhost:3000/get_project_by_id", {
+          projectName: projectName,
+        })
+        .then((res) => {
+          console.log(res.data[0].img);
+          setTextLayers(res.data[0].layers)
+          setFile(res.data[0].img)
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  useEffect(() => {
+    getAlreadyCreatedCertificate();
+  }, []);
 
   function addLayer() {
     let layer = {
@@ -306,7 +324,9 @@ function CertificatePage() {
       </div>
       {/* right side tools */}
       <RightSideBar
+        alreadyUploadedImg={file}
         upload={uploadImage}
+        textLayers={textLayers}
         changeAttributeValues={changeAttributeValues}
         textName={textName}
         changeAttributeColor={changeAttributeColor}
