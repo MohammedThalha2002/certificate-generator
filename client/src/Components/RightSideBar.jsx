@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ExcelUpload from "./ExcelUpload";
 import { exportComponentAsPNG } from "react-component-export-image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faCloudArrowUp, faDownload } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 function RightSideBar({
@@ -37,7 +37,7 @@ function RightSideBar({
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
     // new file was uploaded so use the file
-    if(img !== fileUploaded){
+    if (img !== fileUploaded) {
       setImgAlreadyUploaded(false);
     }
     setImg(fileUploaded);
@@ -161,6 +161,7 @@ function RightSideBar({
             console.log("project creation failed");
           });
       }
+      setLoading(false);
     }
   }
 
@@ -201,7 +202,7 @@ function RightSideBar({
             style={{ display: "none" }}
           />
           <FontAwesomeIcon
-            icon={faCloudArrowUp}
+            icon={loading ? faDownload : faCloudArrowUp}
             width="20px"
             className="cursor-pointer pr-4 pt-1"
             onClick={saveProjectToCloud}

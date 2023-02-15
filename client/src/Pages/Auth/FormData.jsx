@@ -11,6 +11,7 @@ function FormData() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [showpassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const state = useSelector((state) => state.auth.isLogin);
   let navigate = useNavigate();
@@ -110,7 +111,7 @@ function FormData() {
           </label>
           <div className="relative">
             <input
-              type="password"
+              type={showpassword ? "text" : "password"}
               className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
               placeholder="Enter password"
               onChange={(e) => {
@@ -118,7 +119,10 @@ function FormData() {
               }}
             />
 
-            <span className="absolute inset-y-0 right-4 inline-flex items-center">
+            <span
+              className="absolute inset-y-0 right-4 cursor-pointer inline-flex items-center"
+              onClick={() => setShowPassword(!showpassword)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-gray-400"

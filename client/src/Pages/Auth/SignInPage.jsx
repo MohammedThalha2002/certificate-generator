@@ -12,8 +12,8 @@ function SignInPage() {
     // state ==> true
     // Login Page
     return (
-      <div className="h-screen bg-bgWhite flex justify-center items-center">
-        <div className=" h-3/4 w-9/12 rounded-2xl shadow-2xl flex overflow-hidden">
+      <div className="h-screen bg-bgGrey flex justify-center items-center">
+        <div className=" h-3/4 w-9/12 rounded-2xl shadow-2xl shadow-black flex overflow-hidden">
           <SignInContent text="Log In" />
           <SignInLoginInSideContent />
         </div>
@@ -22,8 +22,8 @@ function SignInPage() {
   } else {
     // Sign in Page state ==> false
     return (
-      <div className="h-screen bg-bgWhite flex justify-center items-center">
-        <div className=" h-3/4 w-9/12 rounded-2xl shadow-2xl flex overflow-hidden">
+      <div className="h-screen bg-bgGrey flex justify-center items-center">
+        <div className=" h-3/4 w-9/12 rounded-2xl shadow-2xl shadow-black flex overflow-hidden">
           <SignInContent text="Sign In" />
           <SignInLoginInSideContent />
         </div>

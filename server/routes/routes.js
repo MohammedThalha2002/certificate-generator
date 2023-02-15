@@ -11,6 +11,7 @@ app.post("/add_project", async (req, res) => {
     res.send(project);
   } catch (error) {
     res.status(500).send(error);
+    console.log(error);
   }
 });
 
