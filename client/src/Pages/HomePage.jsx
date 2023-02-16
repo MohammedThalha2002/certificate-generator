@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { LogoutFirebase } from "../firebase/authentications";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const navigate = useNavigate();
   const [projectData, setProjectData] = useState([]);
   const headTextRef = useRef();
   // NAV CONTENTS
@@ -101,9 +103,16 @@ function HomePage() {
           </h1>
         </div>
         <div>
-          <button 
-          onClick={LogoutFirebase}
-          className="bg-highlight px-3 py-2 rounded-lg font-medium text-white">
+          <button
+            onClick={async () => {
+              let res = await LogoutFirebase();
+              console.log(res);
+              if (res === "success") {
+                navigate("/");
+              }
+            }}
+            className="bg-highlight px-3 py-2 rounded-lg font-medium text-white"
+          >
             Log Out
           </button>
         </div>
