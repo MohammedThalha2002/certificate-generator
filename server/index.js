@@ -8,13 +8,13 @@ const PORT = 3000;
 const app = express();
 
 // MIDDLEWARES
-app.use(express.json({limit: '5mb'}));
-app.use(express.urlencoded({limit: '5mb'}));
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb" }));
 app.use(cors());
 app.use(Router);
 
 mongoose.connect(
-  "mongodb+srv://MohammedThalha:Thalha2002@cluster0.r1i2q4n.mongodb.net/?retryWrites=true&w=majority",
+  "mongodb://MohammedThalha:Thalha2002@ac-lhvvwum-shard-00-00.r1i2q4n.mongodb.net:27017,ac-lhvvwum-shard-00-01.r1i2q4n.mongodb.net:27017,ac-lhvvwum-shard-00-02.r1i2q4n.mongodb.net:27017/?ssl=true&replicaSet=atlas-l3r3qk-shard-0&authSource=admin&retryWrites=true&w=majority",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
