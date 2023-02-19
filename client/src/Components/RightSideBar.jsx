@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExcelUpload from "./ExcelUpload";
+import { useParams } from "react-router-dom";
 import { exportComponentAsPNG } from "react-component-export-image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp, faDownload } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 function RightSideBar({
-  alreadyUploadedImg,
+  imgFromAssets,
   upload,
   textLayers,
   changeAttributeValues,
@@ -25,10 +26,14 @@ function RightSideBar({
 }) {
   const hiddenFileInput = React.useRef(null);
   const [img, setImg] = useState("");
-  const [imgAlreadyUploaded, setImgAlreadyUploaded] = useState(false);
-  const [url, setUrl] = useState("");
+  const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
   const [multiExport, setMultiExport] = useState(false);
+  const { id } = useParams();
+
+  useEffect(() => {
+    setImg(imgFromAssets);
+  }, [imgFromAssets]);
 
   const handleClick = () => {
     hiddenFileInput.current.click();
@@ -36,12 +41,7 @@ function RightSideBar({
 
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
-    // new file was uploaded so use the file
-    if (img !== fileUploaded) {
-      setImgAlreadyUploaded(false);
-    }
-    setImg(fileUploaded);
-    // setImg(URL.createObjectURL(fileUploaded));
+    setFile(fileUploaded);
     upload(fileUploaded);
   };
 
@@ -84,16 +84,16 @@ function RightSideBar({
   };
 
   async function saveProjectToCloud() {
+    console.log(img);
     setLoading(true);
-    const projectName = sessionStorage.getItem("projectName");
-    if (img && !imgAlreadyUploaded && !projectName) {
-      const base64 = await convertBase64(img);
+    if (img.slice(0, 5) != "https") {
+      console.log("Image uploading to cloudinary...");
+      const base64 = await convertBase64(file);
       axios
         .post("http://localhost:3000/uploadImage", { image: base64 })
         .then((res) => {
-          setUrl(res.data);
+          setImg(res.data);
           console.log("Image uploaded Succesfully");
-          setImgAlreadyUploaded(true);
           addOrUpdateProject();
         })
         .catch((err) => {
@@ -105,23 +105,23 @@ function RightSideBar({
     }
 
     async function addOrUpdateProject() {
+      console.log("Project : ", id);
       const token = sessionStorage.getItem("Auth Token");
-      const projectName = sessionStorage.getItem("projectName");
       let today = new Date();
       let dd = String(today.getDate()).padStart(2, "0");
-      let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      let mm = String(today.getMonth() + 1).padStart(2, "0");
       let yyyy = today.getFullYear();
 
       today = mm + "/" + dd + "/" + yyyy;
 
-      if (projectName) {
+      if (id != "new") {
         // project already exits --> update
-        console.log("project updating started");
+        console.log("project updating started...");
         const Projectdata = {
           user: token,
           date: today,
-          projectName: projectName,
-          img: url || alreadyUploadedImg,
+          projectName: id, // as id is not new thre will be already exists
+          img: img,
           layers: textLayers,
         };
 
@@ -134,19 +134,20 @@ function RightSideBar({
           .then((res) => {
             console.log(res);
             setLoading(false);
-            console.log("project updated");
+            console.log("project updated sucessfully");
           })
           .catch((err) => {
             console.log("project updating failed");
           });
       } else {
+        console.log("IMAGE IS GOING TO UPLOAD AS URL", img);
         // create project --> add
-        console.log("project creating ....");
+        console.log("project creation started ....");
         const Projectdata = {
           user: token,
           date: today,
           projectName: (Math.random() + 1).toString(36).substring(7),
-          img: url,
+          img: img,
           layers: textLayers,
         };
         await axios

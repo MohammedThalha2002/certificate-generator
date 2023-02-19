@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
 import Draggable from "react-draggable";
@@ -21,9 +22,12 @@ function CertificatePage() {
   // PRINTING
   const printCertificateRef = useRef();
 
+  // PROJECT ID
+  const { id } = useParams();
+
   // GETTING DATA IF PROJECT IS ALREADY CREATED
   async function getAlreadyCreatedCertificate() {
-    const projectName = sessionStorage.getItem("projectName");
+    const projectName = id;
     if (projectName) {
       await axios
         .post("http://localhost:3000/get_project_by_id", {
@@ -31,15 +35,15 @@ function CertificatePage() {
         })
         .then((res) => {
           console.log(res.data[0].img);
-          setTextLayers(res.data[0].layers)
-          setFile(res.data[0].img)
+          setTextLayers(res.data[0].layers);
+          setFile(res.data[0].img);
         })
         .catch((err) => console.log(err));
     }
   }
 
   useEffect(() => {
-    getAlreadyCreatedCertificate();
+    if (id != "new") getAlreadyCreatedCertificate();
   }, []);
 
   function addLayer() {
@@ -100,9 +104,9 @@ function CertificatePage() {
 
   // Upload assets image
 
-  const uploadAssetImage = useCallback((img) => {
+  function uploadAssetImage(img) {
     setFile(img);
-  }, []);
+  }
 
   // RIGHT SIDE BAR RELATED
 
@@ -257,7 +261,6 @@ function CertificatePage() {
     <div className="h-screen w-screen flex overflow-hidden">
       {/* left side bar*/}
       <LeftSideBar
-        // disablePointer={disablePointer}
         textLayers={textLayers}
         selectedText={selectedText}
         setSelectedText={setSelectedText}
@@ -324,7 +327,7 @@ function CertificatePage() {
       </div>
       {/* right side tools */}
       <RightSideBar
-        alreadyUploadedImg={file}
+        imgFromAssets={file}
         upload={uploadImage}
         textLayers={textLayers}
         changeAttributeValues={changeAttributeValues}

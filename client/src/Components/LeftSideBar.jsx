@@ -1,16 +1,6 @@
 import React, { useState, memo, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
-import Cert1 from "../assets/1.png";
-import Cert2 from "../assets/2.png";
-import Cert3 from "../assets/3.png";
-import Cert4 from "../assets/4.png";
-import Cert5 from "../assets/5.png";
-import Cert6 from "../assets/6.png";
-import Cert7 from "../assets/7.png";
-import Cert8 from "../assets/8.png";
-import Cert9 from "../assets/9.png";
-import Cert10 from "../assets/10.png";
 
 function LeftSideBar({
   textLayers,
@@ -35,16 +25,16 @@ function LeftSideBar({
   const [assetsClick, setAssetsClick] = useState(false);
 
   const assets = [
-    Cert1,
-    Cert2,
-    Cert3,
-    Cert4,
-    Cert5,
-    Cert6,
-    Cert7,
-    Cert8,
-    Cert9,
-    Cert10,
+    "https://i.postimg.cc/Dzzvx6M3/1.png",
+    "https://i.postimg.cc/mrcxc5nk/10.png",
+    "https://i.postimg.cc/xjm0pct8/2.png",
+    "https://i.postimg.cc/kGPdPvf4/3.png",
+    "https://i.postimg.cc/K8pS82JC/4.png",
+    "https://i.postimg.cc/RV9zPGWp/5.png",
+    "https://i.postimg.cc/cLFZtY49/6.png",
+    "https://i.postimg.cc/j57r1F6m/7.png",
+    "https://i.postimg.cc/0jG1kKBC/8.png",
+    "https://i.postimg.cc/k5ZmfmSW/9.png",
   ];
 
   function LayerClick() {
@@ -103,7 +93,6 @@ function LeftSideBar({
   }
 
   const Assets = memo(() => {
-
     return (
       <div
         style={{

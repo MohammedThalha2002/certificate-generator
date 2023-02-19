@@ -10,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/certificate" element={<Certificate />} />
+          <Route path="/certificate/:id" element={<Certificate />} />
         </Routes>
       </BrowserRouter>
     </div>
