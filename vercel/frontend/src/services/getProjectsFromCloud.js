@@ -4,7 +4,7 @@ async function getProjectFromCloud(setProjectData) {
   const token = sessionStorage.getItem("Auth Token");
 
   await axios
-    .post("http://localhost:3000/get_projects", {
+    .post("https://certificate-generator-backend-node.vercel.app/get_projects", {
       user: token,
     })
     .then((res) => setProjectData(res.data))

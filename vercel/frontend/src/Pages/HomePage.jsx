@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import getProjectFromCloud from "../services/getProjectsFromCloud";
 import HomeNav from "./Components/HomeNav";

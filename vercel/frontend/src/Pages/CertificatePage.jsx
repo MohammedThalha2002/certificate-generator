@@ -30,7 +30,7 @@ function CertificatePage() {
     const projectName = id;
     if (projectName) {
       await axios
-        .post("http://localhost:3000/get_project_by_id", {
+        .post("https://certificate-generator-backend-node.vercel.app/get_project_by_id", {
           projectName: projectName,
         })
         .then((res) => {

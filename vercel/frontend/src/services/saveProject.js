@@ -16,15 +16,17 @@ async function saveProjectToCloud(
     console.log("Image uploading to cloudinary...");
     const base64 = await convertBase64(file);
     axios
-      .post("http://localhost:3000/uploadImage", { image: base64 })
+      .post(
+        "https://certificate-generator-backend-node.vercel.app/uploadImage",
+        { image: base64 }
+      )
       .then(async (res) => {
         setImg(res.data);
         console.log("Image uploaded Succesfully. URL :", res.data);
-        result = await addOrUpdateProject(res.data);
+        await addOrUpdateProject(res.data);
       })
       .catch((err) => {
         console.log(err);
-        result = "failed";
         toast.error("Failed to save", {
           position: "top-right",
           autoClose: 3000,
@@ -37,7 +39,7 @@ async function saveProjectToCloud(
         });
       });
   } else {
-    result = await addOrUpdateProject();
+    await addOrUpdateProject();
   }
 
   async function addOrUpdateProject(imgUrl) {
@@ -62,16 +64,18 @@ async function saveProjectToCloud(
       };
 
       await axios
-        .post("http://localhost:3000/update_project", {
-          user: token,
-          projectName: Projectdata.projectName,
-          values: Projectdata,
-        })
+        .post(
+          "https://certificate-generator-backend-node.vercel.app/update_project",
+          {
+            user: token,
+            projectName: Projectdata.projectName,
+            values: Projectdata,
+          }
+        )
         .then((res) => {
           console.log(res);
           setLoading(false);
           console.log("project updated sucessfully");
-          innerRes = "success";
           toast.success("Project saved Successfully", {
             position: "top-right",
             autoClose: 3000,
@@ -108,7 +112,10 @@ async function saveProjectToCloud(
         layers: textLayers,
       };
       await axios
-        .post("http://localhost:3000/add_project", Projectdata)
+        .post(
+          "https://certificate-generator-backend-node.vercel.app/add_project",
+          Projectdata
+        )
         .then((res) => {
           console.log(res);
           setLoading(false);

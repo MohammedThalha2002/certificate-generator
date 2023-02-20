@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { LogoutFirebase } from "../../firebase/authentications";
 import textEffect from "./TextEffect";
+import { useNavigate } from "react-router-dom";
 
 function HomeNav() {
   const headTextRef = useRef();
@@ -9,6 +10,8 @@ function HomeNav() {
   const community = useRef();
   const explore = useRef();
   const contribute = useRef();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // TEXT ANIMATION

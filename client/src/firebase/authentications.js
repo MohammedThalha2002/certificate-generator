@@ -8,20 +8,15 @@ import {
 
 export const authenticationSystem = async (state, email, password) => {
   console.log("IN auth system :", email, password);
-  const authentication = getAuth();
   let result = "Something went wrong";
   // state --> false => register by creating email and password
   console.log("state : ", state);
   if (!state) {
     console.log("Signing in");
-    await createUserWithEmailAndPassword(authentication, email, password)
+    await createUserWithEmailAndPassword(email, password)
       .then((response) => {
         console.log(response);
-        authentication.currentUser
-          .getIdToken()
-          .then((data) =>
-            sessionStorage.setItem("Auth Token", data.slice(0, 13))
-          );
+        sessionStorage.setItem("Auth Token", response.user.uid);
         result = "success";
       })
       .catch((error) => {
@@ -45,14 +40,9 @@ export const authenticationSystem = async (state, email, password) => {
       });
   } else {
     console.log("Logging in");
-    await signInWithEmailAndPassword(authentication, email, password)
+    await signInWithEmailAndPassword(email, password)
       .then((response) => {
-        authentication.currentUser
-          .getIdToken()
-          .then((data) =>
-            sessionStorage.setItem("Auth Token", data.slice(0, 13))
-          );
-
+        sessionStorage.setItem("Auth Token", response.user.uid);
         result = "success";
       })
       .catch((error) => {

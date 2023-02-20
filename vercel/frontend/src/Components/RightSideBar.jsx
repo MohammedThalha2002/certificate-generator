@@ -93,22 +93,18 @@ function RightSideBar({
           <FontAwesomeIcon
             icon={loading ? faSpinner : faCloudArrowUp}
             width="20px"
-            className="fa-spin cursor-pointer ml-4"
-            onClick={ () => {
-              setLoading(true);
-              // setTimeout(() => {
-              //   setImg(false);
-              // }, 5000);
-              // await saveProjectToCloud(
-              //   img,
-              //   file,
-              //   setLoading,
-              //   setImg,
-              //   id,
-              //   textLayers,
-              //   navigate,
-              //   toast
-              // );
+            className="cursor-pointer ml-4"
+            onClick={async () => {
+              await saveProjectToCloud(
+                img,
+                file,
+                setLoading,
+                setImg,
+                id,
+                textLayers,
+                navigate,
+                toast
+              );
             }}
           />
         </div>
