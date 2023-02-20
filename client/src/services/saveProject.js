@@ -10,7 +10,6 @@ async function saveProjectToCloud(
   navigate,
   toast
 ) {
-  let result = "";
   console.log(img);
   setLoading(true);
   if (img.slice(0, 4) == "blob") {
@@ -42,7 +41,6 @@ async function saveProjectToCloud(
   }
 
   async function addOrUpdateProject(imgUrl) {
-    let innerRes = "failed";
     console.log("Project : ", id);
     const token = sessionStorage.getItem("Auth Token");
     let today = new Date();

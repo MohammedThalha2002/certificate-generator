@@ -27,6 +27,10 @@ db.once("open", function () {
   console.log("DB Connected successfully");
 });
 
+app.get("/", (req, res) => {
+  res.send("BACKEND RUNNING AT PORT 3000");
+});
+
 app.listen(PORT, () => {
   console.log(`SERVER STARTED at PORT : ${PORT}`);
 });
