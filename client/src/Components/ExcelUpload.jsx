@@ -2,11 +2,11 @@ import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { read, utils } from "xlsx";
+import { exportToPNG } from "../services/exports";
 
 function ExcelUpload({
   setMultiExport,
-  exportToJPG,
-  exportToPNG,
+  printCertificateRef,
   changeAttributeValuesForMulExports,
 }) {
   const hiddenFileInput = useRef(null);
@@ -43,7 +43,7 @@ function ExcelUpload({
       console.log(".................");
       console.log("PRINT CERTIFICATE");
       console.log(".................");
-      await exportToPNG();
+      exportToPNG(printCertificateRef);
     }
   }
 

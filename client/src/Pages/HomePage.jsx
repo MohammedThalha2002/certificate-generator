@@ -15,22 +15,15 @@ function HomePage() {
     getProjectFromCloud(setProjectData);
   }, []);
 
-  // function createProject() {
-  //   sessionStorage.removeItem("projectName");
-  // }
-
-  // function openProject(projectName) {
-  //   sessionStorage.setItem("projectName", projectName);
-  // }
-
   return (
     <section className="h-screen w-full bg-bgGrey overflow-hidden flex flex-col items-center">
       {/* ADD PROJECT */}
       <HomeNav />
-      <div className="w-[85%] border-2 border-white h-[65%] mt-10 rounded-t-3xl flex flex-wrap">
+      <div className="w-[85%] border-2 border-white h-[65%] mt-10 rounded-t-2xl p-2
+       flex flex-wrap overflow-y-scroll">
         {/* CREATE PROJECT DIV */}
         <div
-          className="border-2 border-white border-solid h-52 w-64 m-4 rounded-lg
+          className="border-2 border-white border-solid h-52 w-64 m-4 mt-6 rounded-lg
        flex items-center justify-center cursor-pointer"
         >
           <div
@@ -47,7 +40,7 @@ function HomePage() {
         </div>
         {/* SAVED PROJECTS DIV */}
         {projectData.map((val) => (
-          <div key={val._id} className="mr-4">
+          <div key={val._id} className="m-2">
             <p className="text-white text-xs">{val.date}</p>
             <div
               onClick={() => {

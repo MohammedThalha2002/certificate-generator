@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ExcelUpload from "./ExcelUpload";
-import { useParams } from "react-router-dom";
-import { exportComponentAsPNG } from "react-component-export-image";
+import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp, faDownload } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import saveProjectToCloud from "../services/saveProject";
+import { exportToJPG, exportToPNG } from "../services/exports";
+import { ToastContainer, toast } from "react-toastify";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function RightSideBar({
   imgFromAssets,
@@ -30,8 +32,10 @@ function RightSideBar({
   const [loading, setLoading] = useState(false);
   const [multiExport, setMultiExport] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(imgFromAssets);
     setImg(imgFromAssets);
   }, [imgFromAssets]);
 
@@ -50,129 +54,13 @@ function RightSideBar({
     setMultiExport(true);
   }
 
-  function exportToPNG(name) {
-    exportComponentAsPNG(printCertificateRef, {
-      fileName: name || "certificate",
-      html2CanvasOptions: {
-        backgroundColor: "transparent",
-      },
-    });
-  }
-
-  function exportToJPG() {
-    exportComponentAsPNG(printCertificateRef, {
-      fileName: "certificate",
-      html2CanvasOptions: {
-        backgroundColor: "transparent",
-      },
-    });
-  }
-
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  async function saveProjectToCloud() {
-    console.log(img);
-    setLoading(true);
-    if (img.slice(0, 5) != "https") {
-      console.log("Image uploading to cloudinary...");
-      const base64 = await convertBase64(file);
-      axios
-        .post("http://localhost:3000/uploadImage", { image: base64 })
-        .then((res) => {
-          setImg(res.data);
-          console.log("Image uploaded Succesfully");
-          addOrUpdateProject();
-        })
-        .catch((err) => {
-          console.log(err);
-          return;
-        });
-    } else {
-      addOrUpdateProject();
-    }
-
-    async function addOrUpdateProject() {
-      console.log("Project : ", id);
-      const token = sessionStorage.getItem("Auth Token");
-      let today = new Date();
-      let dd = String(today.getDate()).padStart(2, "0");
-      let mm = String(today.getMonth() + 1).padStart(2, "0");
-      let yyyy = today.getFullYear();
-
-      today = mm + "/" + dd + "/" + yyyy;
-
-      if (id != "new") {
-        // project already exits --> update
-        console.log("project updating started...");
-        const Projectdata = {
-          user: token,
-          date: today,
-          projectName: id, // as id is not new thre will be already exists
-          img: img,
-          layers: textLayers,
-        };
-
-        await axios
-          .post("http://localhost:3000/update_project", {
-            user: token,
-            projectName: Projectdata.projectName,
-            values: Projectdata,
-          })
-          .then((res) => {
-            console.log(res);
-            setLoading(false);
-            console.log("project updated sucessfully");
-          })
-          .catch((err) => {
-            console.log("project updating failed");
-          });
-      } else {
-        console.log("IMAGE IS GOING TO UPLOAD AS URL", img);
-        // create project --> add
-        console.log("project creation started ....");
-        const Projectdata = {
-          user: token,
-          date: today,
-          projectName: (Math.random() + 1).toString(36).substring(7),
-          img: img,
-          layers: textLayers,
-        };
-        await axios
-          .post("http://localhost:3000/add_project", Projectdata)
-          .then((res) => {
-            sessionStorage.setItem("projectName", Projectdata.projectName);
-            console.log(res);
-            setLoading(false);
-            console.log("project created sucessfully");
-          })
-          .catch((err) => {
-            console.log("project creation failed");
-          });
-      }
-      setLoading(false);
-    }
-  }
-
   return (
     <>
+      <ToastContainer />
       {multiExport ? (
         <ExcelUpload
           setMultiExport={setMultiExport}
-          exportToJPG={exportToJPG}
-          exportToPNG={exportToPNG}
+          printCertificateRef={printCertificateRef}
           changeAttributeValuesForMulExports={
             changeAttributeValuesForMulExports
           }
@@ -203,10 +91,25 @@ function RightSideBar({
             style={{ display: "none" }}
           />
           <FontAwesomeIcon
-            icon={loading ? faDownload : faCloudArrowUp}
+            icon={loading ? faSpinner : faCloudArrowUp}
             width="20px"
-            className="cursor-pointer pr-4 pt-1"
-            onClick={saveProjectToCloud}
+            className="fa-spin cursor-pointer ml-4"
+            onClick={ () => {
+              setLoading(true);
+              // setTimeout(() => {
+              //   setImg(false);
+              // }, 5000);
+              // await saveProjectToCloud(
+              //   img,
+              //   file,
+              //   setLoading,
+              //   setImg,
+              //   id,
+              //   textLayers,
+              //   navigate,
+              //   toast
+              // );
+            }}
           />
         </div>
         {/* TEXT PROPERTIES */}
@@ -307,13 +210,17 @@ function RightSideBar({
 
           <button
             className="text-black my-2 bg-white p-2 rounded-md"
-            onClick={exportToJPG}
+            onClick={() => {
+              exportToJPG(printCertificateRef);
+            }}
           >
             Export As JPEG
           </button>
           <button
             className="text-black my-2 bg-white p-2 rounded-md"
-            onClick={exportToPNG}
+            onClick={() => {
+              exportToPNG(printCertificateRef);
+            }}
           >
             Export As PNG
           </button>
