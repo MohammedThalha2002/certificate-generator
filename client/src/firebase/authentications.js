@@ -9,11 +9,12 @@ import {
 export const authenticationSystem = async (state, email, password) => {
   console.log("IN auth system :", email, password);
   let result = "Something went wrong";
+  const authentication = getAuth();
   // state --> false => register by creating email and password
   console.log("state : ", state);
   if (!state) {
     console.log("Signing in");
-    await createUserWithEmailAndPassword(email, password)
+    await createUserWithEmailAndPassword(authentication, email, password)
       .then((response) => {
         console.log(response);
         sessionStorage.setItem("Auth Token", response.user.uid);
@@ -40,7 +41,7 @@ export const authenticationSystem = async (state, email, password) => {
       });
   } else {
     console.log("Logging in");
-    await signInWithEmailAndPassword(email, password)
+    await signInWithEmailAndPassword(authentication, email, password)
       .then((response) => {
         sessionStorage.setItem("Auth Token", response.user.uid);
         result = "success";
