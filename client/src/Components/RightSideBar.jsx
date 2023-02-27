@@ -2,27 +2,23 @@ import React, { useEffect, useState } from "react";
 import ExcelUpload from "./ExcelUpload";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp, faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import saveProjectToCloud from "../services/saveProject";
 import { exportToJPG, exportToPNG } from "../services/exports";
 import { ToastContainer, toast } from "react-toastify";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  changeTextValue,
+  changeFontColor,
+  changeFontFamily,
+  changeFontSize,
+  changeFontWeight,
+} from "../hooks/reducers/certificateSlice";
 
 function RightSideBar({
   imgFromAssets,
   upload,
-  textLayers,
-  changeAttributeValues,
-  textName,
-  changeAttributeColor,
-  textColor,
-  selectedText,
-  changeAttributeFontWeight,
-  fontWeight,
-  changeAttributeFontSize,
-  fontSize,
-  changeAttributeFontFamily,
-  fontFamily,
   printCertificateRef,
   changeAttributeValuesForMulExports,
 }) {
@@ -33,6 +29,15 @@ function RightSideBar({
   const [multiExport, setMultiExport] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const textLayers = useSelector((state) => state.certificate.textLayers);
+  const selectedText = useSelector((state) => state.certificate.selectedText);
+  const textValue = useSelector((state) => state.certificate.textValue);
+  const textColor = useSelector((state) => state.certificate.textColor);
+  const fontSize = useSelector((state) => state.certificate.fontSize);
+  const fontWeight = useSelector((state) => state.certificate.fontWeight);
+  const fontFamily = useSelector((state) => state.certificate.fontFamily);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log(imgFromAssets);
@@ -94,21 +99,21 @@ function RightSideBar({
             icon={loading ? faSpinner : faCloudArrowUp}
             width="20px"
             className="fa-spin cursor-pointer ml-4"
-            onClick={ () => {
+            onClick={async () => {
               setLoading(true);
-              // setTimeout(() => {
-              //   setImg(false);
-              // }, 5000);
-              // await saveProjectToCloud(
-              //   img,
-              //   file,
-              //   setLoading,
-              //   setImg,
-              //   id,
-              //   textLayers,
-              //   navigate,
-              //   toast
-              // );
+              setTimeout(() => {
+                setLoading(false);
+              }, 5000);
+              await saveProjectToCloud(
+                img,
+                file,
+                setLoading,
+                setImg,
+                id,
+                textLayers,
+                navigate,
+                toast
+              );
             }}
           />
         </div>
@@ -120,14 +125,14 @@ function RightSideBar({
           <h1 className="pb-2">Text</h1>
           <input
             type="text"
-            value={textName}
-            onChange={(e) => changeAttributeValues(e.target.value)}
+            value={textValue}
+            onChange={(e) => dispatch(changeTextValue(e.target.value))}
             className="bg-transparent w-[100%] py-1 px-1
              border-stroke border-solid border-[1px]"
           />
           <select
             value={fontFamily}
-            onChange={(e) => changeAttributeFontFamily(e.target.value)}
+            onChange={(e) => dispatch(changeFontFamily(e.target.value))}
             className="bg-transparent w-[100%] py-1 px-1 mt-8 dark:bg-greyHighlight dark:border-solid
                dark:border-stroke dark:border-[1px] dark:text-white"
           >
@@ -147,7 +152,7 @@ function RightSideBar({
             {/* FONT WEIGHT */}
             <select
               value={fontWeight}
-              onChange={(e) => changeAttributeFontWeight(e.target.value)}
+              onChange={(e) => dispatch(changeFontWeight(e.target.value))}
               className="bg-transparent w-[45%] py-1 px-1 mt-8 dark:bg-greyHighlight dark:border-solid
                dark:border-stroke dark:border-[1px] dark:text-white"
             >
@@ -162,7 +167,7 @@ function RightSideBar({
             <input
               type="number"
               value={fontSize}
-              onChange={(e) => changeAttributeFontSize(e.target.value)}
+              onChange={(e) => dispatch(changeFontSize(e.target.value))}
               className="bg-transparent w-[45%] py-1 px-1 mt-8
              border-stroke border-solid border-[1px]"
             />
@@ -183,7 +188,7 @@ function RightSideBar({
                 width="10px"
                 height="10px"
                 disabled={selectedText ? "" : "disabled"}
-                onChange={(e) => changeAttributeColor(e.target.value)}
+                onChange={(e) => dispatch(changeFontColor(e.target.value))}
               />
             </div>
             <select

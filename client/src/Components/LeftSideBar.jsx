@@ -1,28 +1,23 @@
 import React, { useState, memo, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
-
-function LeftSideBar({
-  textLayers,
-  selectedText,
-  setSelectedText,
+import EditLayerName from "../Pages/Components/EditLayerName";
+import { useSelector, useDispatch } from "react-redux";
+import {
   handleLayerClick,
   handleEditPenClick,
-  delLayer,
-  nameChangeSelected,
-  setNameChange,
-  nameChange,
-  setChangeToNameFromInput,
+  deleteLayer,
   addLayer,
-  setTextName,
-  setFontSize,
-  setFontWeight,
-  setTextColor,
-  setFontFamily,
-  uploadAssetImage,
-}) {
+} from "../hooks/reducers/certificateSlice";
+
+function LeftSideBar({ uploadAssetImage }) {
   const [layerClick, setLayerClick] = useState(true);
   const [assetsClick, setAssetsClick] = useState(false);
+  const [nameChangeSelected, setNameChangeSelected] = useState(false);
+
+  const dispatch = useDispatch();
+  const textLayers = useSelector((state) => state.certificate.textLayers);
+  const selectedText = useSelector((state) => state.certificate.selectedText);
 
   const assets = [
     "https://i.postimg.cc/Dzzvx6M3/1.png",
@@ -64,17 +59,22 @@ function LeftSideBar({
             icon={faPen}
             width="10px"
             className="cursor-pointer pr-6 pt-1"
-            onClick={() => handleEditPenClick(val.id, val.name)}
+            onClick={() => {
+              dispatch(handleEditPenClick({ id: val.id, name: val.name }));
+              setNameChangeSelected(!nameChangeSelected);
+            }}
           />
           <h1
             onClick={() =>
-              handleLayerClick(
-                val.id,
-                val.val,
-                val.color,
-                val.fontWeight,
-                val.fontSize,
-                val.fontFamily
+              dispatch(
+                handleLayerClick({
+                  id: val.id,
+                  val: val.val,
+                  color: val.color,
+                  fontWeight: val.fontWeight,
+                  fontSize: val.fontSize,
+                  fontFamily: val.fontFamily,
+                })
               )
             }
             className="select-none w-full text-start"
@@ -86,7 +86,7 @@ function LeftSideBar({
           icon={faTrash}
           width="10px"
           className="cursor-pointer pr-4 pt-1"
-          onClick={() => delLayer(val.id)}
+          onClick={() => dispatch(deleteLayer(val.id))}
         />
       </div>
     ));
@@ -117,36 +117,11 @@ function LeftSideBar({
 
   return (
     <>
-      {/* top layers for entering name */}
-      <div
-        style={{
-          display: nameChangeSelected ? "block" : "none",
-        }}
-        className="h-[30vh] z-50 w-[40vw] -translate-x-[50%] -translate-y-[50%]
-       bg-[#363636] rounded-md absolute left-1/2 top-1/2 shadow-lg text-center"
-      >
-        <h1 className="text-white mt-12">Enter the unique Name</h1>
-        <input
-          type="text"
-          className="mt-8 p-2 w-[25vw]"
-          value={nameChange || ""}
-          onChange={(e) => setNameChange(e.target.value)}
-        />
-        <br />
-        <button
-          className="bg-white px-6 py-1 rounded-md m-8"
-          onClick={setChangeToNameFromInput}
-        >
-          Set
-        </button>
-      </div>
-      <div
-        style={{
-          display: nameChangeSelected ? "block" : "none",
-        }}
-        className="h-screen w-full absolute top-0
-        opacity-40 bg-[#2C2C2C]"
-      ></div>
+      {/* hidden layers for entering name */}
+      <EditLayerName
+        nameChangeSelected={nameChangeSelected}
+        setNameChangeSelected={setNameChangeSelected}
+      />
       {/* left bar */}
       <div
         className="bg-greyHighlight h-screen w-[20%] 
@@ -175,20 +150,13 @@ function LeftSideBar({
           <FontAwesomeIcon
             icon={faPlus}
             className="cursor-pointer"
-            onClick={addLayer}
+            onClick={() => dispatch(addLayer())}
           />
         </div>
         {layerClick ? <Layers /> : <Assets />}
         <div
           className="h-full"
-          onClick={() => {
-            setSelectedText("");
-            setTextName("");
-            setTextColor("");
-            setFontWeight("");
-            setFontSize("");
-            setFontFamily("");
-          }}
+          onClick={() => dispatch(handleLayerClick(""))}
         ></div>
       </div>
     </>

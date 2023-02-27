@@ -49,11 +49,11 @@ export const authenticationSystem = async (state, email, password) => {
       .catch((error) => {
         console.error(error);
         switch (error.code) {
-          case "auth/email-already-in-use":
-            result = `Email address already in use`;
-            break;
           case "auth/wrong-password":
             result = `Enter the correct password`;
+            break;
+          case "auth/user-not-found":
+            result = `Enter the correct email`;
             break;
           default:
             result = "Something went wrong";
