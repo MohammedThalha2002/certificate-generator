@@ -14,11 +14,10 @@ import {
   changeFontFamily,
   changeFontSize,
   changeFontWeight,
+  addImage,
 } from "../hooks/reducers/certificateSlice";
 
 function RightSideBar({
-  imgFromAssets,
-  upload,
   printCertificateRef,
   changeAttributeValuesForMulExports,
 }) {
@@ -37,6 +36,7 @@ function RightSideBar({
   const fontSize = useSelector((state) => state.certificate.fontSize);
   const fontWeight = useSelector((state) => state.certificate.fontWeight);
   const fontFamily = useSelector((state) => state.certificate.fontFamily);
+  const imgFromAssets = useSelector((state) => state.certificate.imgUrl);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,7 +51,8 @@ function RightSideBar({
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
     setFile(fileUploaded);
-    upload(fileUploaded);
+    const imgUrl = URL.createObjectURL(fileUploaded);
+    dispatch(addImage({ img: imgUrl }));
   };
 
   function handleMultipleExports() {

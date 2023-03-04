@@ -3,14 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import EditLayerName from "../Pages/Components/EditLayerName";
 import { useSelector, useDispatch } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 import {
   handleLayerClick,
   handleEditPenClick,
   deleteLayer,
   addLayer,
+  addImage,
 } from "../hooks/reducers/certificateSlice";
 
-function LeftSideBar({ uploadAssetImage }) {
+function LeftSideBar() {
   const [layerClick, setLayerClick] = useState(true);
   const [assetsClick, setAssetsClick] = useState(false);
   const [nameChangeSelected, setNameChangeSelected] = useState(false);
@@ -18,6 +20,7 @@ function LeftSideBar({ uploadAssetImage }) {
   const dispatch = useDispatch();
   const textLayers = useSelector((state) => state.certificate.textLayers);
   const selectedText = useSelector((state) => state.certificate.selectedText);
+  const imgUrl = useSelector((state) => state.certificate.imgUrl);
 
   const assets = [
     "https://i.postimg.cc/Dzzvx6M3/1.png",
@@ -106,7 +109,7 @@ function LeftSideBar({ uploadAssetImage }) {
             // style={{
             //   backgroundColor: assetSelected == val ? "#788C9E" : "",
             // }}
-            onClick={() => uploadAssetImage(val)}
+            onClick={() => dispatch(addImage({ img: val }))}
             src={val}
             className="p-4 cursor-pointer"
           />
@@ -117,6 +120,7 @@ function LeftSideBar({ uploadAssetImage }) {
 
   return (
     <>
+      <ToastContainer />
       {/* hidden layers for entering name */}
       <EditLayerName
         nameChangeSelected={nameChangeSelected}
@@ -150,7 +154,21 @@ function LeftSideBar({ uploadAssetImage }) {
           <FontAwesomeIcon
             icon={faPlus}
             className="cursor-pointer"
-            onClick={() => dispatch(addLayer())}
+            onClick={() => {
+              if (imgUrl) dispatch(addLayer());
+              else {
+                toast.error("Add an image to add Layer", {
+                  position: "top-right",
+                  autoClose: 1500,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+              }
+            }}
           />
         </div>
         {layerClick ? <Layers /> : <Assets />}

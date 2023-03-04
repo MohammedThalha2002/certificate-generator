@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const certificateSlice = createSlice({
   name: "certificate",
   initialState: {
+    imgUrl: "",
     selectedText: "",
     textLayers: [],
     // edit attributes
@@ -15,6 +16,10 @@ const certificateSlice = createSlice({
     fontFamily: "Poppins",
   },
   reducers: {
+    addImage: (state, action) => {
+      const { img } = action.payload;
+      state.imgUrl = img;
+    },
     addLayer: (state) => {
       const newLayer = {
         id: Math.random(),
@@ -186,6 +191,7 @@ const certificateSlice = createSlice({
 });
 
 export const {
+  addImage,
   addLayer,
   deleteLayer,
   handleLayerClick,
