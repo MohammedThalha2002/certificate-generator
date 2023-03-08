@@ -43,7 +43,7 @@ function ExcelUpload({
       console.log(".................");
       console.log("PRINT CERTIFICATE");
       console.log(".................");
-      exportToPNG(printCertificateRef);
+      await exportToPNG(printCertificateRef);
     }
   }
 

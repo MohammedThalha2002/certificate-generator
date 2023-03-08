@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Router = require("./routes/routes");
 const multer = require("multer");
 const { decodeMsg } = require("./template/generateImages");
+// const predictCertificate = require("./services/predictCertificate");
 
 const PORT = 3000;
 
@@ -44,9 +45,14 @@ app.get("/", (req, res) => {
   res.send("BACKEND RUNNING AT PORT 3000");
 });
 
-app.post("/image-decode", upload.single("file"), function (req, res) {
+app.post("/image-decode", upload.single("file"), (req, res) => {
   console.log(req.file.path);
   decodeMsg(req, res);
+});
+
+app.post("/predict-certificate", (req, res) => {
+  // console.log(req.file.path);
+  // predictCertificate(req, res);
 });
 
 app.listen(PORT, () => {

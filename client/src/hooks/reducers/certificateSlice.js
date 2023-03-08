@@ -15,6 +15,7 @@ const certificateSlice = createSlice({
     fontWeight: "",
     fontFamily: "",
     textPos: { x: 0, y: 0 },
+    certificateAllowed: true,
   },
   reducers: {
     addImage: (state, action) => {
@@ -219,6 +220,9 @@ const certificateSlice = createSlice({
       // console.log(newPos, id);
       state.textLayers = updatedTextLayers;
     },
+    changeCertificateType: (state,action) => {
+      state.certificateAllowed = action.payload;
+    },
   },
 });
 
@@ -237,6 +241,7 @@ export const {
   changeFontWeight,
   changeNameInEditInput,
   changeTextPos,
+  changeCertificateType
 } = certificateSlice.actions;
 
 export default certificateSlice.reducer;

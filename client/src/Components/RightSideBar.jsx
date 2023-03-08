@@ -8,6 +8,7 @@ import { exportToJPG, exportToPNG } from "../services/exports";
 import { ToastContainer, toast } from "react-toastify";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
+import ml5 from "ml5";
 import {
   changeTextValue,
   changeFontColor,
@@ -15,6 +16,7 @@ import {
   changeFontSize,
   changeFontWeight,
   addImage,
+  changeCertificateType,
 } from "../hooks/reducers/certificateSlice";
 
 function RightSideBar({
@@ -45,6 +47,27 @@ function RightSideBar({
     console.log(imgFromAssets);
     setImg(imgFromAssets);
   }, [imgFromAssets]);
+
+  useEffect(() => {
+    const classifier = ml5.imageClassifier(
+      "https://teachablemachine.withgoogle.com/models/yWO4ObRNp/model.json",
+      (e) => {
+        console.log("ML file loaded");
+      }
+    );
+    if (file) {
+      dispatch(changeCertificateType(true));
+      classifier.classify(document.getElementById("image"), (err, results) => {
+        console.log(results);
+        const val = results[0].label;
+        if (val !== "normal") {
+          dispatch(changeCertificateType(false));
+          setFile("");
+          dispatch(addImage({ img: "" }));
+        }
+      });
+    }
+  }, [file]);
 
   const handleClick = () => {
     hiddenFileInput.current.click();

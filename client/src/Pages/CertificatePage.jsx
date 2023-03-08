@@ -4,6 +4,8 @@ import LeftSideBar from "../Components/LeftSideBar";
 import RightSideBar from "../Components/RightSideBar";
 import Draggable from "react-draggable";
 import axios from "axios";
+import Lottie from "lottie-react";
+import lottieAnimation from "../assets/animation.json";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -20,6 +22,7 @@ function CertificatePage() {
     height: 0,
     width: 0,
   });
+  // const [allowedCertificate, setAllowedCertificate] = useState(true);
 
   // PRINTING
   const printCertificateRef = useRef();
@@ -31,6 +34,9 @@ function CertificatePage() {
   const textLayers = useSelector((state) => state.certificate.textLayers);
   const selectedText = useSelector((state) => state.certificate.selectedText);
   const image = useSelector((state) => state.certificate.imgUrl);
+  const allowedCertificate = useSelector(
+    (state) => state.certificate.certificateAllowed
+  );
   const dispatch = useDispatch();
 
   // GETTING DATA IF PROJECT IS ALREADY CREATED
@@ -79,6 +85,7 @@ function CertificatePage() {
           fontSize: val.fontSize,
           color: val.color,
           opacity: val.opacity,
+          textPos: val.textPos,
         };
       } else {
         return val;
@@ -184,10 +191,22 @@ function CertificatePage() {
               <div></div>
             )}
             <img
+              id="image"
               src={image}
               className="w-full"
               onClick={() => dispatch(handleLayerClick(""))}
             />
+            {!allowedCertificate ? (
+              <div className="flex flex-col justify-center items-center text-center">
+                <Lottie animationData={lottieAnimation} loop={true} />
+                <h1 className="text-white font-semibold text-2xl font-mono">
+                  YOU ARE TRYING TO UPLOAD OTHER PARTY CERTIFICATE WHICH IS
+                  AGAINST OUR POLICY
+                </h1>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

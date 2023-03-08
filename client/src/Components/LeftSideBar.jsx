@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import {
   handleLayerClick,
   handleEditPenClick,
+  changeCertificateType,
   deleteLayer,
   addLayer,
   addImage,
@@ -109,7 +110,10 @@ function LeftSideBar({ handleBrowserResize }) {
             // style={{
             //   backgroundColor: assetSelected == val ? "#788C9E" : "",
             // }}
-            onClick={() => dispatch(addImage({ img: val }))}
+            onClick={() => {
+              dispatch(changeCertificateType(true));
+              dispatch(addImage({ img: val }));
+            }}
             src={val}
             className="p-4 cursor-pointer"
           />
@@ -156,8 +160,9 @@ function LeftSideBar({ handleBrowserResize }) {
             className="cursor-pointer"
             onClick={() => {
               handleBrowserResize();
-              if (imgUrl) dispatch(addLayer());
-              else {
+              if (imgUrl) {
+                dispatch(addLayer());
+              } else {
                 toast.error("Add an image to add Layer", {
                   position: "top-right",
                   autoClose: 1500,
