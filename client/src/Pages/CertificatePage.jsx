@@ -10,17 +10,15 @@ import {
   setTextLayers,
   handleLayerClick,
   addImage,
+  changeTextPos,
 } from "../hooks/reducers/certificateSlice";
 
 function CertificatePage() {
+  const [loading, setLoading] = useState(true);
   const certificateSize = useRef();
-  const textRef = useRef();
   const [certficateSizes, setCertficateSizes] = useState({
     height: 0,
     width: 0,
-  });
-  const [initalPos, setInitialPos] = useState({
-    x: 10,
   });
 
   // PRINTING
@@ -33,7 +31,6 @@ function CertificatePage() {
   const textLayers = useSelector((state) => state.certificate.textLayers);
   const selectedText = useSelector((state) => state.certificate.selectedText);
   const image = useSelector((state) => state.certificate.imgUrl);
-  const textWidth = useSelector((state) => state.certificate.textWidth);
   const dispatch = useDispatch();
 
   // GETTING DATA IF PROJECT IS ALREADY CREATED
@@ -45,16 +42,26 @@ function CertificatePage() {
           projectName: projectName,
         })
         .then((res) => {
-          console.log(res.data[0].img);
+          // console.log(res.data[0].img);
+          dispatch(addImage({ img: res.data[0].img }));
+          handleBrowserResize();
           dispatch(setTextLayers(res.data[0].layers));
-          dispatch(addImage(res.data[0].img));
+          console.log(res.data[0].layers);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     }
   }
 
   useEffect(() => {
-    if (id != "new") getAlreadyCreatedCertificate();
+    if (id != "new") {
+      getAlreadyCreatedCertificate();
+    } else {
+      // Clearing all old values if present
+      dispatch(setTextLayers([]));
+      dispatch(addImage({ img: "" }));
+      setLoading(false);
+    }
   }, []);
 
   // change attribute value for multiple exports
@@ -83,20 +90,15 @@ function CertificatePage() {
   }
 
   function handleBrowserResize() {
-    // console.log(certificateSize.current.getBoundingClientRect());
     const { height, width } = certificateSize.current.getBoundingClientRect();
     setCertficateSizes({
       height: height,
       width: width,
     });
-    let percent = sessionStorage.getItem("percent");
-    let pos = percent != null ? (percent * width - 100) / 100 : 0;
-    console.log(percent, pos);
-    setInitialPos({ x: pos - 35, y: 0 });
+    console.log(height, width);
   }
 
   useEffect(() => {
-    handleBrowserResize();
     window.addEventListener("resize", handleBrowserResize);
 
     return () => {
@@ -104,84 +106,84 @@ function CertificatePage() {
     };
   }, []);
 
-  function trackPos(data) {
-    console.log(data.x, data.y);
-    const { width } = certificateSize.current.getBoundingClientRect();
-    console.log("setting position");
-    let percent = (data.x / (width - 100)) * 100;
-    sessionStorage.setItem("percent", percent);
-    // let pos = (percent * certficateSizes.width - 100) / 100;
-    // console.log(pos, percent);
-    // setInitialPos({ x: pos - 35 });
+  function trackPos(data, id) {
+    // console.log(data.x, data.y);
+    const { width, height } = certificateSize.current.getBoundingClientRect();
+    console.log(width, height);
+    let percentX = (data.x / width) * 100;
+    let percentY = (data.y / height) * 100;
+    // console.log(percentX, percentY);
+    dispatch(changeTextPos([{ x: percentX, y: percentY }, id]));
   }
 
   return (
     <div className="h-screen w-screen flex overflow-hidden">
       {/* left side bar*/}
-      <LeftSideBar />
+      <LeftSideBar handleBrowserResize={handleBrowserResize} />
       {/* center -certficate */}
       <div className="bg-bgGrey h-screen w-[58%] relative flex items-center justify-center">
         <div
           className="bg-transparent flex items-center justify-center w-full"
           ref={printCertificateRef}
         >
-          <div className="w-[95%] relative">
-            {textLayers.map((val) => (
-              <Draggable
-                key={val.id}
-                bounds={{
-                  left: 0,
-                  right: certficateSizes.width,
-                  top: 0,
-                  bottom: certficateSizes.height - 48,
-                }}
-                defaultPosition={{
-                  x: initalPos.x,
-                  y: 224,
-                }}
-                // axis="x"
-
-                onStop={(e, data) => trackPos(data)}
-              >
-                <div
-                  ref={textRef}
-                  style={{
-                    border: selectedText == val.id ? "2px solid #7aff95" : "",
-                    padding: "4px",
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
+          <div ref={certificateSize} className="w-[95%] relative">
+            {!loading ? (
+              textLayers.map((val) => (
+                <Draggable
+                  key={val.id}
+                  bounds={{
+                    left: 0,
+                    right: certficateSizes.width,
+                    top: 0,
+                    bottom: certficateSizes.height,
                   }}
-                  onClick={() =>
-                    dispatch(
-                      handleLayerClick({
-                        id: val.id,
-                        val: val.val,
+                  defaultPosition={{
+                    x: (val.textPos.x * certficateSizes.width) / 100,
+                    y: (val.textPos.y * certficateSizes.height) / 100,
+                  }}
+                  // axis="x"
+                  onStop={(e, data) => trackPos(data, val.id)}
+                >
+                  <div
+                    style={{
+                      border: selectedText == val.id ? "2px solid #7aff95" : "",
+                      padding: "4px",
+                      cursor: "pointer",
+                      position: "absolute",
+                      top: "0",
+                      left: "0",
+                    }}
+                    onClick={() =>
+                      dispatch(
+                        handleLayerClick({
+                          id: val.id,
+                          val: val.val,
+                          color: val.color,
+                          fontWeight: val.fontWeight,
+                          fontSize: val.fontSize,
+                          fontFamily: val.fontFamily,
+                        })
+                      )
+                    }
+                  >
+                    <h1
+                      style={{
                         color: val.color,
                         fontWeight: val.fontWeight,
-                        fontSize: val.fontSize,
+                        fontSize: val.fontSize + "px",
                         fontFamily: val.fontFamily,
-                      })
-                    )
-                  }
-                >
-                  <h1
-                    style={{
-                      color: val.color,
-                      fontWeight: val.fontWeight,
-                      fontSize: val.fontSize + "px",
-                      fontFamily: val.fontFamily,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {val.val}
-                  </h1>
-                </div>
-              </Draggable>
-            ))}
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {val.val}
+                    </h1>
+                  </div>
+                </Draggable>
+              ))
+            ) : (
+              <div></div>
+            )}
             <img
-              ref={certificateSize}
               src={image}
               className="w-full"
               onClick={() => dispatch(handleLayerClick(""))}
@@ -193,6 +195,8 @@ function CertificatePage() {
       <RightSideBar
         printCertificateRef={printCertificateRef}
         changeAttributeValuesForMulExports={changeAttributeValuesForMulExports}
+        width={certficateSizes.width}
+        height={certficateSizes.height}
       />
     </div>
   );

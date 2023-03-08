@@ -2,10 +2,23 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Router = require("./routes/routes");
+const multer = require("multer");
+const { decodeMsg } = require("./template/generateImages");
 
 const PORT = 3000;
 
 const app = express();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "out/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // MIDDLEWARES
 app.use(express.json({ limit: "5mb" }));
@@ -29,6 +42,11 @@ db.once("open", function () {
 
 app.get("/", (req, res) => {
   res.send("BACKEND RUNNING AT PORT 3000");
+});
+
+app.post("/image-decode", upload.single("file"), function (req, res) {
+  console.log(req.file.path);
+  decodeMsg(req, res);
 });
 
 app.listen(PORT, () => {

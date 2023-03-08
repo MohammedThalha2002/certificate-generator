@@ -12,7 +12,7 @@ import {
   addImage,
 } from "../hooks/reducers/certificateSlice";
 
-function LeftSideBar() {
+function LeftSideBar({ handleBrowserResize }) {
   const [layerClick, setLayerClick] = useState(true);
   const [assetsClick, setAssetsClick] = useState(false);
   const [nameChangeSelected, setNameChangeSelected] = useState(false);
@@ -155,6 +155,7 @@ function LeftSideBar() {
             icon={faPlus}
             className="cursor-pointer"
             onClick={() => {
+              handleBrowserResize();
               if (imgUrl) dispatch(addLayer());
               else {
                 toast.error("Add an image to add Layer", {

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Solitreo&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Solitreo&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: transparent;
+      }
+      #img-div {
+        width: 688.1875px;
+        height: 486.35px;
+        position: relative;
+      }
+      img {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="img-div"></div>
+  </body>
+  <script>
+    const layerDiv = document.getElementById("img-div");
+
+    textLayers.forEach((val) => {
+      const x = (val.textPos.x * layerDiv.offsetWidth) / 100;
+      const y = (val.textPos.y * layerDiv.offsetHeight) / 100;
+      console.log(layerDiv.offsetHeight);
+      layerDiv.innerHTML += `
+        <div style="position: absolute; padding : 4px; top: ${
+          y + "px"
+        }; left: ${x + "px"}">
+        <h1
+          style="
+            color: ${val.color};
+            font-weight: ${val.fontWeight};
+            font-size: ${val.fontSize + "px"};
+            font-family: ${val.fontFamily};
+            white-space: nowrap;
+          "
+        >
+          XXXX
+        </h1>
+      </div>
+        `;
+    });
+    layerDiv.innerHTML += `<img src="https://i.postimg.cc/mrcxc5nk/10.png" />`;
+  </script>
+</html>

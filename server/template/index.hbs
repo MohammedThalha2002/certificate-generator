@@ -1,0 +1,67 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @import
+      url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;800&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Solitreo&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Solitreo&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+      * { margin: 0; padding: 0; box-sizing: border-box; } body { height: 100vh;
+      background-color: transparent; display: flex; justify-content: center;
+      align-items: center; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="img-div"
+      style="height: {{addPX height}}; 
+      width: {{addPX width}}; position: relative;"
+    >
+      {{#each layers as |layer|}}
+        <div
+          style="position: absolute; 
+          top: {{getPosY layer.textPos.y}};
+          left: {{getPosX layer.textPos.x}};
+          padding : 4px;"
+        >
+          <h1
+            style="
+              color: {{layer.color}};
+              font-weight: {{layer.fontWeight}};
+              font-size: {{addPX layer.fontSize}};
+              font-family: {{layer.fontFamily}};
+              white-space: nowrap;
+            "
+          >
+            {{layer.val}}
+          </h1>
+        </div>
+      {{/each}}
+      <img
+        src="{{image}}"
+        style="height: {{addPX height}}; 
+        width: {{addPX width}};"
+      />
+    </div>
+  </body>
+</html>

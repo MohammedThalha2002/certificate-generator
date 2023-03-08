@@ -20,6 +20,8 @@ import {
 function RightSideBar({
   printCertificateRef,
   changeAttributeValuesForMulExports,
+  height,
+  width,
 }) {
   const hiddenFileInput = React.useRef(null);
   const [img, setImg] = useState("");
@@ -99,7 +101,7 @@ function RightSideBar({
           <FontAwesomeIcon
             icon={loading ? faSpinner : faCloudArrowUp}
             width="20px"
-            className="fa-spin cursor-pointer ml-4"
+            className="cursor-pointer ml-4"
             onClick={async () => {
               setLoading(true);
               setTimeout(() => {
@@ -217,7 +219,7 @@ function RightSideBar({
           <button
             className="text-black my-2 bg-white p-2 rounded-md"
             onClick={() => {
-              exportToJPG(printCertificateRef);
+              exportToJPG(height, width, imgFromAssets, textLayers);
             }}
           >
             Export As JPEG

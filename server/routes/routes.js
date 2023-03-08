@@ -2,6 +2,11 @@ const express = require("express");
 const app = express();
 const projectModel = require("../models/ProjectModel");
 const uploadImage = require("../UploadImg");
+const {
+  generate,
+  singleGenerate,
+  sendFile,
+} = require("../template/generateImages");
 
 app.post("/add_project", async (req, res) => {
   const project = new projectModel(req.body);
@@ -61,6 +66,18 @@ app.post("/uploadImage", (req, res) => {
   uploadImage(req.body.image)
     .then((url) => res.send(url))
     .catch((err) => res.status(500).send(err));
+});
+
+app.post("/export-png", (req, res) => {
+  singleGenerate(req, res);
+});
+
+app.get("/get-file", (req, res) => {
+  sendFile(req, res);
+});
+
+app.get("/multi-generate", (req, res) => {
+  generate(req, res);
 });
 
 module.exports = app;

@@ -1,0 +1,20 @@
+// vite.config.js
+import { defineConfig } from "file:///D:/Development/Web%20development/certificate-generators/client/node_modules/vite/dist/node/index.js";
+import react from "file:///D:/Development/Web%20development/certificate-generators/client/node_modules/@vitejs/plugin-react/dist/index.mjs";
+var vite_config_default = defineConfig({
+  plugins: [react()],
+  server: {
+    watch: {
+      usePolling: true
+    },
+    host: true,
+    // needed for the Docker Container port mapping to work
+    strictPort: true,
+    port: 8080
+    // you can replace this port with any port
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJEOlxcXFxEZXZlbG9wbWVudFxcXFxXZWIgZGV2ZWxvcG1lbnRcXFxcY2VydGlmaWNhdGUtZ2VuZXJhdG9yc1xcXFxjbGllbnRcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfZmlsZW5hbWUgPSBcIkQ6XFxcXERldmVsb3BtZW50XFxcXFdlYiBkZXZlbG9wbWVudFxcXFxjZXJ0aWZpY2F0ZS1nZW5lcmF0b3JzXFxcXGNsaWVudFxcXFx2aXRlLmNvbmZpZy5qc1wiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9pbXBvcnRfbWV0YV91cmwgPSBcImZpbGU6Ly8vRDovRGV2ZWxvcG1lbnQvV2ViJTIwZGV2ZWxvcG1lbnQvY2VydGlmaWNhdGUtZ2VuZXJhdG9ycy9jbGllbnQvdml0ZS5jb25maWcuanNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tIFwidml0ZVwiO1xuaW1wb3J0IHJlYWN0IGZyb20gXCJAdml0ZWpzL3BsdWdpbi1yZWFjdFwiO1xuXG4vLyBodHRwczovL3ZpdGVqcy5kZXYvY29uZmlnL1xuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgcGx1Z2luczogW3JlYWN0KCldLFxuICBzZXJ2ZXI6IHtcbiAgICB3YXRjaDoge1xuICAgICAgdXNlUG9sbGluZzogdHJ1ZSxcbiAgICB9LFxuICAgIGhvc3Q6IHRydWUsIC8vIG5lZWRlZCBmb3IgdGhlIERvY2tlciBDb250YWluZXIgcG9ydCBtYXBwaW5nIHRvIHdvcmtcbiAgICBzdHJpY3RQb3J0OiB0cnVlLFxuICAgIHBvcnQ6IDgwODAsIC8vIHlvdSBjYW4gcmVwbGFjZSB0aGlzIHBvcnQgd2l0aCBhbnkgcG9ydFxuICB9XG59KTtcbiJdLAogICJtYXBwaW5ncyI6ICI7QUFBa1gsU0FBUyxvQkFBb0I7QUFDL1ksT0FBTyxXQUFXO0FBR2xCLElBQU8sc0JBQVEsYUFBYTtBQUFBLEVBQzFCLFNBQVMsQ0FBQyxNQUFNLENBQUM7QUFBQSxFQUNqQixRQUFRO0FBQUEsSUFDTixPQUFPO0FBQUEsTUFDTCxZQUFZO0FBQUEsSUFDZDtBQUFBLElBQ0EsTUFBTTtBQUFBO0FBQUEsSUFDTixZQUFZO0FBQUEsSUFDWixNQUFNO0FBQUE7QUFBQSxFQUNSO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K

@@ -18,7 +18,7 @@ function HomePage() {
   return (
     <section className="h-screen w-full bg-bgGrey overflow-hidden flex flex-col items-center">
       {/* ADD PROJECT */}
-      <HomeNav />
+      <HomeNav title={true}/>
       <div className="w-[85%] border-2 border-white h-[65%] mt-10 rounded-t-2xl p-2
        flex flex-wrap overflow-y-scroll">
         {/* CREATE PROJECT DIV */}

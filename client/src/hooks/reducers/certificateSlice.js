@@ -9,11 +9,12 @@ const certificateSlice = createSlice({
     // edit attributes
     nameInEditInput: "",
     // text attributes
-    textValue: "XXXXXX",
-    textColor: "#000000",
-    fontSize: "24",
-    fontWeight: "400",
-    fontFamily: "Poppins",
+    textValue: "",
+    textColor: "",
+    fontSize: "",
+    fontWeight: "",
+    fontFamily: "",
+    textPos: { x: 0, y: 0 },
   },
   reducers: {
     addImage: (state, action) => {
@@ -30,6 +31,7 @@ const certificateSlice = createSlice({
         fontSize: "24",
         color: "#000000",
         opacity: "100",
+        textPos: { x: 0, y: 0 },
       };
       state.textLayers = [...state.textLayers, newLayer];
     },
@@ -73,6 +75,7 @@ const certificateSlice = createSlice({
             fontWeight: val.fontWeight,
             color: val.color,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
@@ -96,6 +99,7 @@ const certificateSlice = createSlice({
             fontSize: val.fontSize,
             color: val.color,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
@@ -117,6 +121,7 @@ const certificateSlice = createSlice({
             fontSize: action.payload,
             color: val.color,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
@@ -138,6 +143,7 @@ const certificateSlice = createSlice({
             fontSize: val.fontSize,
             color: val.color,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
@@ -159,6 +165,7 @@ const certificateSlice = createSlice({
             fontSize: val.fontSize,
             color: val.color,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
@@ -180,11 +187,36 @@ const certificateSlice = createSlice({
             // change
             color: action.payload,
             opacity: val.opacity,
+            textPos: val.textPos,
           };
         } else {
           return val;
         }
       });
+      state.textLayers = updatedTextLayers;
+    },
+    changeTextPos: (state, action) => {
+      const newPos = action.payload[0];
+      const id = action.payload[1];
+      const updatedTextLayers = state.textLayers.map((val) => {
+        if (val.id == id) {
+          return {
+            id: val.id,
+            name: val.name,
+            val: val.val,
+            fontFamily: val.fontFamily,
+            fontWeight: val.fontWeight,
+            fontSize: val.fontSize,
+            color: val.color,
+            opacity: val.opacity,
+            // change
+            textPos: newPos,
+          };
+        } else {
+          return val;
+        }
+      });
+      // console.log(newPos, id);
       state.textLayers = updatedTextLayers;
     },
   },
@@ -204,6 +236,7 @@ export const {
   changeFontSize,
   changeFontWeight,
   changeNameInEditInput,
+  changeTextPos,
 } = certificateSlice.actions;
 
 export default certificateSlice.reducer;

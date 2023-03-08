@@ -20,7 +20,7 @@ async function saveProjectToCloud(
       .then(async (res) => {
         setImg(res.data);
         console.log("Image uploaded Succesfully. URL :", res.data);
-        result = await addOrUpdateProject(res.data);
+        await addOrUpdateProject(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +37,7 @@ async function saveProjectToCloud(
         });
       });
   } else {
-    result = await addOrUpdateProject();
+    await addOrUpdateProject();
   }
 
   async function addOrUpdateProject(imgUrl) {
@@ -71,7 +71,6 @@ async function saveProjectToCloud(
           console.log(res);
           setLoading(false);
           console.log("project updated sucessfully");
-          innerRes = "success";
           toast.success("Project saved Successfully", {
             position: "top-right",
             autoClose: 3000,
@@ -84,7 +83,7 @@ async function saveProjectToCloud(
           });
         })
         .catch((err) => {
-          console.log("project updating failed");
+          console.log("project updating failed", err);
           toast.error("Failed to save", {
             position: "top-right",
             autoClose: 3000,
