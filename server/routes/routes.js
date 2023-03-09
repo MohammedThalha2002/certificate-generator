@@ -1,12 +1,38 @@
 const express = require("express");
 const app = express();
 const projectModel = require("../models/ProjectModel");
+const UserModel = require("../models/UserModel");
 const uploadImage = require("../UploadImg");
 const {
   generate,
   singleGenerate,
   sendFile,
 } = require("../template/generateImages");
+
+app.post("/create-user", async (req, res) => {
+  const user = new UserModel(req.body);
+
+  try {
+    await user.save();
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+app.get("/find-user/:id", async (req, res) => {
+  const userID = req.params.id;
+  try {
+    const user = await UserModel.find({
+      userId: userID,
+    });
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
 
 app.post("/add_project", async (req, res) => {
   const project = new projectModel(req.body);
@@ -15,8 +41,8 @@ app.post("/add_project", async (req, res) => {
     await project.save();
     res.send(project);
   } catch (error) {
-    res.status(500).send(error);
     console.log(error);
+    res.status(500).send(error);
   }
 });
 
@@ -54,6 +80,19 @@ app.post("/update_project", async (req, res) => {
   const update = { $set: values };
   const options = { upsert: true };
   const project = await projectModel.updateOne(query, update, options);
+
+  try {
+    res.send(project);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.delete("/delete-project/:id", async (req, res) => {
+  const projectName = req.params.id;
+  const project = await projectModel.deleteOne({
+    projectName: projectName,
+  });
 
   try {
     res.send(project);

@@ -1,6 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserAndPassword } from "../../hooks/reducers/authSlice";
+import {
+  addUserAndPassword,
+  addUsername,
+} from "../../hooks/reducers/authSlice";
 import { useState } from "react";
 import { authenticationSystem } from "../../firebase/authentications";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +39,7 @@ function FormData() {
         password: password,
       })
     );
-    await authenticationSystem(state, email, password).then((res) => {
+    await authenticationSystem(state, email, password, name).then((res) => {
       if (res == "success") {
         toast.success("SUCESS", {
           position: "top-right",

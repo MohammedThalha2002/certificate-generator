@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { faAdd, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import getProjectFromCloud from "../services/getProjectsFromCloud";
 import HomeNav from "./Components/HomeNav";
+import { deleteProject } from "../services/deleteProject";
+import { ToastContainer, toast } from "react-toastify";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -18,9 +18,12 @@ function HomePage() {
   return (
     <section className="h-screen w-full bg-bgGrey overflow-hidden flex flex-col items-center">
       {/* ADD PROJECT */}
-      <HomeNav title={true}/>
-      <div className="w-[85%] border-2 border-white h-[65%] mt-10 rounded-t-2xl p-2
-       flex flex-wrap overflow-y-scroll">
+      <ToastContainer />
+      <HomeNav title={true} />
+      <div
+        className="w-[85%] border-2 border-white h-[65%] mt-10 rounded-t-2xl p-2
+       flex flex-wrap overflow-y-scroll"
+      >
         {/* CREATE PROJECT DIV */}
         <div
           className="border-2 border-white border-solid h-52 w-64 m-4 mt-6 rounded-lg
@@ -41,15 +44,30 @@ function HomePage() {
         {/* SAVED PROJECTS DIV */}
         {projectData.map((val) => (
           <div key={val._id} className="m-2">
-            <p className="text-white text-xs">{val.date}</p>
+            <div className="flex justify-between items-center">
+              <p className="text-white text-xs">{val.date}</p>
+            </div>
             <div
-              onClick={() => {
-                navigate(`/certificate/${val.projectName}`);
-              }}
-              className="border-2 border-white border-solid h-52 w-64 p-2 rounded-lg
-       flex items-center justify-center cursor-pointer"
+              className="border-2 border-white border-solid h-52 w-64 p-2 rounded-lg relative
+              flex items-center justify-center cursor-pointer"
             >
-              <img src={val.img} className="rounded-lg w-56 h-44" />
+              <div
+                onClick={() => {
+                  deleteProject(val.projectName, toast);
+                  getProjectFromCloud(setProjectData);
+                }}
+                className="bg-white h-[25px] w-[25px] rounded-[50%] mb-[1px] absolute top-2 right-2
+               flex justify-center items-center"
+              >
+                <FontAwesomeIcon icon={faTrash} width="12px" color="red" />
+              </div>
+              <img
+                src={val.img}
+                onClick={() => {
+                  navigate(`/certificate/${val.projectName}`);
+                }}
+                className="rounded-lg w-56 h-44"
+              />
             </div>
           </div>
         ))}

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { showToast } from "./showToast";
 
 async function saveProjectToCloud(
   img,
@@ -25,16 +26,7 @@ async function saveProjectToCloud(
       .catch((err) => {
         console.log(err);
         result = "failed";
-        toast.error("Failed to save", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        showToast(toast, "error", "Failed to save");
       });
   } else {
     await addOrUpdateProject();
@@ -71,29 +63,13 @@ async function saveProjectToCloud(
           console.log(res);
           setLoading(false);
           console.log("project updated sucessfully");
-          toast.success("Project saved Successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          showToast(toast, "success", "Project saved Successfully");
+          //
         })
         .catch((err) => {
           console.log("project updating failed", err);
-          toast.error("Failed to save", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          showToast(toast, "error", "Failed to save");
+          //
         });
     } else {
       console.log("IMAGE IS GOING TO UPLOAD AS URL", img);
@@ -112,31 +88,13 @@ async function saveProjectToCloud(
           console.log(res);
           setLoading(false);
           console.log("project created sucessfully");
-          toast.success("Project saved Successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          showToast(toast, "success", "Project saved Successfully");
           navigate(`/certificate/${Projectdata.projectName}`);
         })
         .catch((err) => {
           console.log("project creation failed");
           innerRes = "failed";
-          toast.error("Failed to save", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          showToast(toast, "error", "Failed to save");
         });
     }
     setLoading(false);

@@ -5,11 +5,12 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import axios from "axios";
 
-export const authenticationSystem = async (state, email, password) => {
+export const authenticationSystem = async (state, email, password, name) => {
   console.log("IN auth system :", email, password);
-  let result = "Something went wrong";
-  const authentication = getAuth();
+  let result = "Something went wrong";                 
+  const authentication = getAuth(app);
   // state --> false => register by creating email and password
   console.log("state : ", state);
   if (!state) {
@@ -19,6 +20,16 @@ export const authenticationSystem = async (state, email, password) => {
         console.log(response);
         sessionStorage.setItem("Auth Token", response.user.uid);
         result = "success";
+        axios
+          .post("http://localhost:3000/create-user", {
+            userId: response.user.uid,
+            name: name,
+          })
+          .then((res) => {
+            console.log(res.data);
+            sessionStorage.setItem("Name", res.data.name);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((error) => {
         switch (error.code) {
@@ -44,6 +55,13 @@ export const authenticationSystem = async (state, email, password) => {
     await signInWithEmailAndPassword(authentication, email, password)
       .then((response) => {
         sessionStorage.setItem("Auth Token", response.user.uid);
+        axios
+          .get(`http://localhost:3000/find-user/${response.user.uid}`)
+          .then((res) => {
+            console.log(res.data[0]);
+            sessionStorage.setItem("Name", res.data[0].name);
+          })
+          .catch((err) => console.log(err));
         result = "success";
       })
       .catch((error) => {
@@ -65,7 +83,7 @@ export const authenticationSystem = async (state, email, password) => {
 };
 
 export const LogoutFirebase = async () => {
-  const authentication = getAuth();
+  const authentication = getAuth(app);
   let res = "Something went wrong";
   await signOut(authentication)
     .then(() => {
