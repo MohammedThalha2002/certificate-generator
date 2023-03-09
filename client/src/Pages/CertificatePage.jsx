@@ -22,7 +22,6 @@ function CertificatePage() {
     height: 0,
     width: 0,
   });
-  // const [allowedCertificate, setAllowedCertificate] = useState(true);
 
   // PRINTING
   const printCertificateRef = useRef();
@@ -63,6 +62,7 @@ function CertificatePage() {
     if (id != "new") {
       getAlreadyCreatedCertificate();
     } else {
+      handleBrowserResize();
       // Clearing all old values if present
       dispatch(setTextLayers([]));
       dispatch(addImage({ img: "" }));

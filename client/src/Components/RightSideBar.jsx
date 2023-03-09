@@ -57,15 +57,22 @@ function RightSideBar({
     );
     if (file) {
       dispatch(changeCertificateType(true));
-      classifier.classify(document.getElementById("image"), (err, results) => {
-        console.log(results);
-        const val = results[0].label;
-        if (val !== "normal") {
-          dispatch(changeCertificateType(false));
-          setFile("");
-          dispatch(addImage({ img: "" }));
-        }
-      });
+      try {
+        classifier.classify(
+          document.getElementById("image"),
+          (err, results) => {
+            console.log(results);
+            const val = results[0].label;
+            if (val !== "normal") {
+              dispatch(changeCertificateType(false));
+              setFile("");
+              dispatch(addImage({ img: "" }));
+            }
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [file]);
 

@@ -52,13 +52,15 @@ const singleGenerate = async (req, res) => {
   console.log("PNG CREATION STARTED...");
   const data = req.body;
   if (data.image.includes("blob")) {
-    // 
+    //
+    // console.log(data.file);
+    // console.log(URL.createObjectURL(data.file));
   }
   try {
     const browser = await puppeteer.launch({
-      headless: false,
-      executablePath:
-        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      // headless: false,
+      // executablePath:
+      //   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     });
     const page = await browser.newPage();
     const content = await compile(data);
@@ -66,23 +68,23 @@ const singleGenerate = async (req, res) => {
     await page.setContent(content);
     await page.emulateMediaType("screen");
 
-    // await page.screenshot({
-    //   path: "out/output.png",
-    //   omitBackground: true,
-    // });
+    await page.screenshot({
+      path: "out/output.png",
+      omitBackground: true,
+    });
 
-    // let encodingData = {
-    //   id: crypto.randomBytes(16).toString("hex"),
-    //   date: getDate(),
-    //   user: "Mohammed Thalha",
-    //   cert_printed: "single",
-    // };
+    let encodingData = {
+      id: crypto.randomBytes(16).toString("hex"),
+      date: getDate(),
+      user: "Mohammed Thalha",
+      cert_printed: "single",
+    };
 
-    // await stegnograph(encodingData);
+    await stegnograph(encodingData);
 
     console.log("Done creating png");
     res.send("DONEAAAAE.....");
-    // await browser.close();
+    await browser.close();
   } catch (e) {
     console.log(e);
     res.send("ERRORRAAAEEE.....");
