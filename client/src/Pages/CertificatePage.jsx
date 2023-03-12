@@ -6,6 +6,7 @@ import Draggable from "react-draggable";
 import axios from "axios";
 import Lottie from "lottie-react";
 import lottieAnimation from "../assets/animation.json";
+import { ToastContainer } from "react-toastify";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -13,6 +14,7 @@ import {
   handleLayerClick,
   addImage,
   changeTextPos,
+  setInputFocus,
 } from "../hooks/reducers/certificateSlice";
 
 function CertificatePage() {
@@ -125,15 +127,16 @@ function CertificatePage() {
 
   return (
     <div className="h-screen w-screen flex overflow-hidden">
+      <ToastContainer />
       {/* left side bar*/}
       <LeftSideBar handleBrowserResize={handleBrowserResize} />
       {/* center -certficate */}
       <div className="bg-bgGrey h-screen w-[58%] relative flex items-center justify-center">
         <div
-          className="bg-transparent flex items-center justify-center w-full"
+          className="bg-transparent flex items-center justify-center w-full mx-5"
           ref={printCertificateRef}
         >
-          <div ref={certificateSize} className="w-[95%] relative">
+          <div className="flex items-center justify-center relative">
             {!loading ? (
               textLayers.map((val) => (
                 <Draggable
@@ -172,6 +175,7 @@ function CertificatePage() {
                         })
                       )
                     }
+                    onDoubleClick={() => dispatch(setInputFocus())}
                   >
                     <h1
                       style={{
@@ -191,9 +195,9 @@ function CertificatePage() {
               <div></div>
             )}
             <img
+              ref={certificateSize}
               id="image"
               src={image}
-              className="w-full"
               onClick={() => dispatch(handleLayerClick(""))}
             />
             {!allowedCertificate ? (
@@ -213,6 +217,7 @@ function CertificatePage() {
       {/* right side tools */}
       <RightSideBar
         printCertificateRef={printCertificateRef}
+        handleBrowserResize={handleBrowserResize}
         changeAttributeValuesForMulExports={changeAttributeValuesForMulExports}
         width={certficateSizes.width}
         height={certficateSizes.height}

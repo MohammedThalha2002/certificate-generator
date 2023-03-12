@@ -25,32 +25,29 @@ const compile = async function (data) {
 };
 
 const generate = async (req, res) => {
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    const content = await compile(data);
-
-    await page.setContent(content);
-    await page.emulateMediaType("screen");
-
-    await page.screenshot({
-      path: "out/output.png",
-      omitBackground: true,
-    });
-
-    console.log("done creating pdf");
-
-    await browser.close();
-    res.send("DONEEE.....");
-  } catch (e) {
-    console.log(e);
-    res.send("ERRORRAAAEEE.....");
-  }
+  // try {
+  //   const browser = await puppeteer.launch();
+  //   const page = await browser.newPage();
+  //   const content = await compile(data);
+  //   await page.setContent(content);
+  //   await page.emulateMediaType("screen");
+  //   await page.screenshot({
+  //     path: "out/output.png",
+  //     omitBackground: true,
+  //   });
+  //   console.log("done creating pdf");
+  //   await browser.close();
+  //   res.send("DONEEE.....");
+  // } catch (e) {
+  //   console.log(e);
+  //   res.send("ERRORRAAAEEE.....");
+  // }
 };
 
 const singleGenerate = async (req, res) => {
   console.log("PNG CREATION STARTED...");
   const data = req.body;
+  console.log(req.body);
   if (data.image.includes("blob")) {
     //
     // console.log(data.file);
@@ -63,6 +60,10 @@ const singleGenerate = async (req, res) => {
       //   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     });
     const page = await browser.newPage();
+    await page.setViewport({
+      width: Math.round(data.width),
+      height: Math.round(data.height),
+    });
     const content = await compile(data);
 
     await page.setContent(content);

@@ -35,7 +35,7 @@ function SignInPage() {
 function SignInContent(props) {
   return (
     <div className="sign-in h-full w-4/5 sm:w-full flex justify-center items-center">
-      <div className="flex flex-col items-center text-center h-3/5">
+      <div className="flex flex-col items-center justify-center text-center h-3/5">
         <h1 className="text-highlight text-4xl mb-5 font-semibold">
           {props.text}
         </h1>

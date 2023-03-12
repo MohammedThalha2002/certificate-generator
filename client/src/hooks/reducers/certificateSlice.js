@@ -5,6 +5,7 @@ const certificateSlice = createSlice({
   initialState: {
     imgUrl: "",
     selectedText: "",
+    inputFocus: false,
     textLayers: [],
     // edit attributes
     nameInEditInput: "",
@@ -62,6 +63,10 @@ const certificateSlice = createSlice({
     },
     changeNameInEditInput: (state, action) => {
       state.nameInEditInput = action.payload;
+    },
+    setInputFocus: (state, action) => {
+      console.log("CHANGED INPUT FOCUS");
+      state.inputFocus = !state.inputFocus;
     },
     setNameChangeFromEditInput: (state) => {
       console.log(state.nameInEditInput);
@@ -220,7 +225,7 @@ const certificateSlice = createSlice({
       // console.log(newPos, id);
       state.textLayers = updatedTextLayers;
     },
-    changeCertificateType: (state,action) => {
+    changeCertificateType: (state, action) => {
       state.certificateAllowed = action.payload;
     },
   },
@@ -241,7 +246,8 @@ export const {
   changeFontWeight,
   changeNameInEditInput,
   changeTextPos,
-  changeCertificateType
+  changeCertificateType,
+  setInputFocus,
 } = certificateSlice.actions;
 
 export default certificateSlice.reducer;

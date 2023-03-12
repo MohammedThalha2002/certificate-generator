@@ -17,7 +17,11 @@ async function saveProjectToCloud(
     console.log("Image uploading to cloudinary...");
     const base64 = await convertBase64(file);
     axios
-      .post("http://localhost:3000/uploadImage", { image: base64 })
+      .post("http://localhost:3000/uploadImage", { image: base64 }, {
+        onUploadProgress : data => {
+          console.log(data);
+        }
+      })
       .then(async (res) => {
         setImg(res.data);
         console.log("Image uploaded Succesfully. URL :", res.data);

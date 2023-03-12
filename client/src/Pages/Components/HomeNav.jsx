@@ -85,7 +85,7 @@ function HomeNav({ title }) {
             style={{
               fontFamily: "Space Mono",
             }}
-            className="text-white font-bold text-5xl"
+            className="text-white font-bold text-5xl text-center"
             data-value="CREATE UNLIMITED CERTIFICATES IN SECONDS"
           >
             CREATE UNLIMITED CERTIFICATES IN SECONDS

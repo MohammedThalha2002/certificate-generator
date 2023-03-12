@@ -10,10 +10,11 @@ import { ToastContainer, toast } from "react-toastify";
 function HomePage() {
   const navigate = useNavigate();
   const [projectData, setProjectData] = useState([]);
+  const [deleteState, setDeleteState] = useState(false);
 
   useEffect(() => {
     getProjectFromCloud(setProjectData);
-  }, []);
+  }, [deleteState]);
 
   return (
     <section className="h-screen w-full bg-bgGrey overflow-hidden flex flex-col items-center">
@@ -53,13 +54,12 @@ function HomePage() {
             >
               <div
                 onClick={() => {
-                  deleteProject(val.projectName, toast);
-                  getProjectFromCloud(setProjectData);
+                  deleteProject(val.projectName, toast, setDeleteState);
                 }}
                 className="bg-white h-[25px] w-[25px] rounded-[50%] mb-[1px] absolute top-2 right-2
                flex justify-center items-center"
               >
-                <FontAwesomeIcon icon={faTrash} width="12px" color="red" />
+                <FontAwesomeIcon icon={faTrash} width="12px" color="#2C2C2C" />
               </div>
               <img
                 src={val.img}

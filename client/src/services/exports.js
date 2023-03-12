@@ -1,6 +1,4 @@
-import {
-  exportComponentAsPNG,
-} from "react-component-export-image";
+import { exportComponentAsPNG } from "react-component-export-image";
 import axios from "axios";
 import { saveAs } from "file-saver";
 

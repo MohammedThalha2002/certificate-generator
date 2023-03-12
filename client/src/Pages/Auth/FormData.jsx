@@ -9,6 +9,7 @@ import { authenticationSystem } from "../../firebase/authentications";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { showToast } from "../../services/showToast";
 
 function FormData() {
   const [name, setName] = useState();
@@ -41,28 +42,10 @@ function FormData() {
     );
     await authenticationSystem(state, email, password, name).then((res) => {
       if (res == "success") {
-        toast.success("SUCESS", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        showToast(toast, "success", "Login Successfully")
         navigate("/home");
       } else {
-        toast.error(res, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        showToast(toast, "error", res);
       }
     });
   };

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ExcelUpload from "./ExcelUpload";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import saveProjectToCloud from "../services/saveProject";
 import { exportToJPG, exportToPNG } from "../services/exports";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import ml5 from "ml5";
@@ -22,10 +22,12 @@ import {
 function RightSideBar({
   printCertificateRef,
   changeAttributeValuesForMulExports,
+  handleBrowserResize,
   height,
   width,
 }) {
-  const hiddenFileInput = React.useRef(null);
+  const hiddenFileInput = useRef(null);
+  const inputValueRef = useRef();
   const [img, setImg] = useState("");
   const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,6 +43,7 @@ function RightSideBar({
   const fontWeight = useSelector((state) => state.certificate.fontWeight);
   const fontFamily = useSelector((state) => state.certificate.fontFamily);
   const imgFromAssets = useSelector((state) => state.certificate.imgUrl);
+  const inputFocus = useSelector((state) => state.certificate.inputFocus);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,6 +88,7 @@ function RightSideBar({
     setFile(fileUploaded);
     const imgUrl = URL.createObjectURL(fileUploaded);
     dispatch(addImage({ img: imgUrl }));
+    handleBrowserResize();
   };
 
   function handleMultipleExports() {
@@ -92,9 +96,12 @@ function RightSideBar({
     setMultiExport(true);
   }
 
+  useEffect(() => {
+    inputValueRef.current.focus();
+  }, [inputFocus]);
+
   return (
     <>
-      <ToastContainer />
       {multiExport ? (
         <ExcelUpload
           setMultiExport={setMultiExport}
@@ -157,6 +164,7 @@ function RightSideBar({
         >
           <h1 className="pb-2">Text</h1>
           <input
+            ref={inputValueRef}
             type="text"
             value={textValue}
             onChange={(e) => dispatch(changeTextValue(e.target.value))}
@@ -249,7 +257,7 @@ function RightSideBar({
           <button
             className="text-black my-2 bg-white p-2 rounded-md"
             onClick={() => {
-              exportToJPG(height, width, imgFromAssets, textLayers);
+              exportToJPG(height, width, imgFromAssets, textLayers, toast);
             }}
           >
             Export As JPEG

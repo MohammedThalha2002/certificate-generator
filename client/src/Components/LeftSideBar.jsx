@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import EditLayerName from "../Pages/Components/EditLayerName";
 import { useSelector, useDispatch } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { assets } from "../constants/certificate_assets";
 import { showToast } from "../services/showToast";
 import {
@@ -24,8 +24,6 @@ function LeftSideBar({ handleBrowserResize }) {
   const textLayers = useSelector((state) => state.certificate.textLayers);
   const selectedText = useSelector((state) => state.certificate.selectedText);
   const imgUrl = useSelector((state) => state.certificate.imgUrl);
-
-
 
   function LayerClick() {
     console.log("layer click");
@@ -104,6 +102,7 @@ function LeftSideBar({ handleBrowserResize }) {
             onClick={() => {
               dispatch(changeCertificateType(true));
               dispatch(addImage({ img: val }));
+              handleBrowserResize();
             }}
             src={val}
             className="p-4 cursor-pointer"
@@ -115,7 +114,6 @@ function LeftSideBar({ handleBrowserResize }) {
 
   return (
     <>
-      <ToastContainer />
       {/* hidden layers for entering name */}
       <EditLayerName
         nameChangeSelected={nameChangeSelected}
@@ -150,7 +148,6 @@ function LeftSideBar({ handleBrowserResize }) {
             icon={faPlus}
             className="cursor-pointer"
             onClick={() => {
-              handleBrowserResize();
               if (imgUrl) {
                 dispatch(addLayer());
               } else {
