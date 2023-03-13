@@ -88,7 +88,7 @@ function ExcelUpload({
           </div>
         )}
 
-        <table className="w-[90%] m-8  border-2 border-solid border-bgGrey">
+        <table className="w-[90%] h-[300px] table-auto m-8 border-2 border-solid border-bgGrey overflow-y-scroll">
           <tr>
             {headings.map((val, key) => (
               <th key={key} className="border-b-2 border-solid border-black">
