@@ -104,7 +104,7 @@ function CertificatePage() {
       height: height,
       width: width,
     });
-    console.log(height, width);
+    console.log("BROWSER RESIZING ", height, width);
   }
 
   useEffect(() => {

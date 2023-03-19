@@ -88,29 +88,31 @@ function ExcelUpload({
           </div>
         )}
 
-        <table className="w-[90%] h-[300px] table-auto m-8 border-2 border-solid border-bgGrey overflow-y-scroll">
-          <tr>
-            {headings.map((val, key) => (
-              <th key={key} className="border-b-2 border-solid border-black">
-                {val}
-              </th>
-            ))}
-          </tr>
-          {jsonData.map((data, key) => {
-            return (
-              <tr key={key}>
-                {headings.map((head, key) => (
-                  <td
-                    key={key}
-                    className="text-center border-b-[1px] border-solid border-black"
-                  >
-                    {data[head]}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </table>
+        <div className="excel-scroll w-[90%] h-[60vh] overflow-y-scroll">
+          <table className=" w-[96%] mx-4 border-2 border-solid border-bgGrey">
+            <tr>
+              {headings.map((val, key) => (
+                <th key={key} className="border-b-2 border-solid border-black">
+                  {val}
+                </th>
+              ))}
+            </tr>
+            {jsonData.map((data, key) => {
+              return (
+                <tr key={key}>
+                  {headings.map((head, key) => (
+                    <td
+                      key={key}
+                      className="text-center border-b-[1px] border-solid border-black"
+                    >
+                      {data[head]}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </table>
+        </div>
         {jsonData.length === 0 ? (
           <></>
         ) : (

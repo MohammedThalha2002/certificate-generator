@@ -149,6 +149,7 @@ function LeftSideBar({ handleBrowserResize }) {
             className="cursor-pointer"
             onClick={() => {
               if (imgUrl) {
+                handleBrowserResize();
                 dispatch(addLayer());
               } else {
                 showToast(toast, "error", "Add an image to add Layer");
