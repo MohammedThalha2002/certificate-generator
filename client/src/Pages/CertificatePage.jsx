@@ -181,7 +181,7 @@ function CertificatePage() {
                       style={{
                         color: val.color,
                         fontWeight: val.fontWeight,
-                        fontSize: val.fontSize + "px",
+                        fontSize: (val.fontSize + "px").toString(),
                         fontFamily: val.fontFamily,
                         whiteSpace: "nowrap",
                       }}
