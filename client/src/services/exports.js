@@ -21,13 +21,13 @@ export async function exportToJPG(height, width, image, textLayers) {
   console.log(data);
   await axios
     .post("http://localhost:3000/export-png", data)
-    .then((res) =>
-      axios.get("http://localhost:3000/get-file", { responseType: "blob" })
-    )
-    .then((res) => {
-      const imgBlob = new Blob([res.data], { type: "application/image" });
-      saveAs(imgBlob, "certificate.png");
-    })
+    // .then((res) =>
+    //   axios.get("http://localhost:3000/get-file", { responseType: "blob" })
+    // )
+    // .then((res) => {
+    //   const imgBlob = new Blob([res.data], { type: "application/image" });
+    //   saveAs(imgBlob, "certificate.png");
+    // })
     .catch((err) => {
       console.log("Failed to export Image", err);
     });

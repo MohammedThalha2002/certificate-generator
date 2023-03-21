@@ -62,11 +62,6 @@ app.post("/image-decode", upload.single("file"), (req, res) => {
   decodeMsg(req, res);
 });
 
-app.post("/predict-certificate", (req, res) => {
-  // console.log(req.file.path);
-  // predictCertificate(req, res);
-});
-
 app.listen(PORT, () => {
   console.log(`SERVER STARTED at PORT : ${PORT}`);
 });
