@@ -3,15 +3,13 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBgQDSpwGEXW0dDD5GLZ1YFs1OL4l0fdo4",
-  authDomain: "code-ai-a197b.firebaseapp.com",
-  projectId: "code-ai-a197b",
-  storageBucket: "code-ai-a197b.appspot.com",
-  messagingSenderId: "698010225306",
-  appId: "1:698010225306:web:f7f4000cdb3209103d2d23",
+  apiKey: "AIzaSyC-xULdflnSecpOiz2VY7W3sVyvlU4-7cs",
+  authDomain: "certificate-generator-989c6.firebaseapp.com",
+  projectId: "certificate-generator-989c6",
+  storageBucket: "certificate-generator-989c6.appspot.com",
+  messagingSenderId: "811533056887",
+  appId: "1:811533056887:web:e0b32b95463fc65676bf72",
 };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-
-
